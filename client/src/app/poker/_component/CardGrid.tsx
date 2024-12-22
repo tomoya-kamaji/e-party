@@ -5,12 +5,12 @@ type CardGridProps = {
 
 export const CardGrid: React.FC<CardGridProps> = ({ cards, onCardClick }) => {
   return (
-    <div className="grid grid-cols-20 gap-2 mb-6">
+    <div className="grid grid-cols-12 gap-1 mb-6">
       {cards.map((value) => (
         <button
           key={value}
           onClick={() => onCardClick(value)}
-          className="bg-card hover:bg-card-hover text-text-primary rounded-lg p-4 shadow-md transition transform hover:scale-105"
+          className="card hover:card-hover w-12 rounded-lg p-2 shadow-md transition transform hover:scale-105 border"
         >
           {value}
         </button>
