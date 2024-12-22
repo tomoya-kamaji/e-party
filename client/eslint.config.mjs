@@ -2,15 +2,40 @@ import { defineConfig } from 'eslint-define-config';
 
 export default defineConfig({
   root: true,
-  extends: ['next', 'plugin:storybook/recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@typescript-eslint/recommended-requiring-type-checking', 'prettier', 'plugin:import/typescript'],
+  extends: [
+    'next',
+    'plugin:storybook/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'prettier',
+    'plugin:import/typescript',
+  ],
   settings: {
     'import/resolver': {
       typescript: {},
     },
   },
-  ignorePatterns: ['.next', '.storybook', '.eslintrc.json', '.prettierignore', '.prettierrc.js', 'tailwind.config.ts', 'postcss.config.js', 'yarn.lock', 'next.config.js', 'next-env.d.ts', 'schema'],
+  ignorePatterns: [
+    '.next',
+    '.storybook',
+    '.eslintrc.json',
+    '.prettierignore',
+    '.prettierrc.js',
+    'tailwind.config.ts',
+    'postcss.config.js',
+    'yarn.lock',
+    'next.config.js',
+    'next-env.d.ts',
+    'schema',
+  ],
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'react-refresh', 'import', '@typescript-eslint', 'unused-imports'],
+  plugins: [
+    'react',
+    'react-refresh',
+    'import',
+    '@typescript-eslint',
+    'unused-imports',
+  ],
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: '.',
@@ -19,7 +44,15 @@ export default defineConfig({
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'object', 'type', 'index'],
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'object',
+          'type',
+          'index',
+        ],
         'newlines-between': 'always',
         pathGroupsExcludedImportTypes: ['builtin'],
         pathGroups: [
