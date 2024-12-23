@@ -1,6 +1,6 @@
 'use client';
 
-import { CardGrid } from './_component/CardGrid';
+import { CardGrid } from '../../feature/poker/component/CardGrid';
 
 export default function Home() {
   const handleCardClick = (value: number) => {
