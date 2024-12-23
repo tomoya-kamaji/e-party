@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev:client": "pnpm --filter client dev",
+    "dev:backend": "pnpm --filter backend dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
