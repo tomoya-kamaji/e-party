@@ -24,6 +24,6 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "./src", "types", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "./src", "types", ".next/types/**/*.ts", "../backend/src/feature/poker/index.ts"],
   "exclude": ["node_modules"]
 }
