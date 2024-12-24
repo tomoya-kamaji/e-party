@@ -10,10 +10,7 @@ export default function Home() {
   const handleCardClick = async (value: number) => {
     const res = await honoClient.api.pokers.$get();
 
-    
-
     console.log(res.json());
-
     alert(`You selected: ${value}`);
   };
 
