@@ -1,11 +1,22 @@
 'use client';
 
-import { CardGrid } from '../../feature/poker/component/CardGrid';
+import { CardGrid } from '@/feature/poker/component/CardGrid';
+import { usePoker } from '@/feature/poker/hook';
+import { honoClient } from '@/util/api';
 
 export default function Home() {
-  const handleCardClick = (value: number) => {
+  const { get } = usePoker();
+
+  const handleCardClick = async (value: number) => {
+    const res = await honoClient.api.pokers.$get();
+
+    
+
+    console.log(res.json());
+
     alert(`You selected: ${value}`);
   };
+
   const cards = [0, 1, 2, 3, 5, 8, 13, 20, 40, 100];
 
   return (
