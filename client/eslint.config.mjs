@@ -15,6 +15,7 @@ export default defineConfig({
       typescript: {},
     },
   },
+  ignores: ['node_modules', 'dist'],
   ignorePatterns: [
     '.next',
     '.storybook',
@@ -29,13 +30,7 @@ export default defineConfig({
     'schema',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: [
-    'react',
-    'react-refresh',
-    'import',
-    '@typescript-eslint',
-    'unused-imports',
-  ],
+  plugins: ['react', 'react-refresh', 'import', '@typescript-eslint', 'unused-imports'],
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: '.',
@@ -44,15 +39,7 @@ export default defineConfig({
     'import/order': [
       'error',
       {
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'object',
-          'type',
-          'index',
-        ],
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'object', 'type', 'index'],
         'newlines-between': 'always',
         pathGroupsExcludedImportTypes: ['builtin'],
         pathGroups: [

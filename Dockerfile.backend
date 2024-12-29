@@ -1,0 +1,31 @@
+# ベースイメージ
+FROM node:20-alpine
+
+# pnpmをインストール
+RUN npm install -g pnpm
+
+# 作業ディレクトリ
+WORKDIR /app
+
+# 必要なファイルをコピー
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY backend/package.json backend/
+
+# 開発依存関係を含めてインストール
+RUN pnpm install --frozen-lockfile
+
+# backendのソースコードをコピー
+COPY backend ./backend
+
+# ビルドを実行
+WORKDIR /app/backend
+RUN pnpm build
+
+# プロダクション用の依存関係だけを残す
+RUN pnpm prune --prod
+
+# アプリケーションを起動
+CMD ["node", "dist/index.js"]
+
+# ポートを公開
+EXPOSE 3000

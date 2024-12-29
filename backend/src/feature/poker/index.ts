@@ -1,9 +1,10 @@
 // authors.ts
 import { Hono } from 'hono';
+import { getPokerUseCase } from './useCase/get';
 
-const pokerApp = new Hono()
-  .get('/', (c) => c.json('list authors'))
-  .post('/', (c) => c.json('create an author', 201))
-  .get('/:id', (c) => c.json(`get ${c.req.param('id')}`));
+const pokerApp = new Hono().get('/', async (c) => {
+  const res = await getPokerUseCase();
+  return c.json(res);
+});
 
 export default pokerApp;
