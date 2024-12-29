@@ -1,18 +1,27 @@
 'use client';
 
-import { honoClient } from '@/util/api';
+import { honoClient, HonoQueryType } from '@/util/api';
 import useSWR from 'swr';
 
 const key = ['pokers', 'get'];
 
-type PokerQuery = typeof honoClient.api.pokers.$get;
+type Query = HonoQueryType<(typeof honoClient.api.pokers)['$get']>;
 
 // データフェッチ関数
-const fetchPoker = async () => {
-  const res = await honoClient.api.pokers.$get();
+const fetchPoker = async (query: Query) => {
+  const res = await honoClient.api.pokers.$get({
+    query,
+  });
   if (!res.ok) {
     throw new Error('エラーが発生しました');
   }
+  const data = await res.json();
+  data.map((d) => {
+    return {
+      id: d.id,
+      name: d.name,
+    };
+  });
   return res.json();
 };
 
