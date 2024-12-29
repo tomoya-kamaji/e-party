@@ -25,6 +25,9 @@ const fetchPoker = async (query: Query) => {
   return res.json();
 };
 
+/**
+ * ポーカーのデータを取得する
+ */
 export const usePoker = () => {
   const { data, error, isLoading, mutate } = useSWR(key, fetchPoker);
 
