@@ -15,13 +15,6 @@ const fetchPoker = async (query: Query) => {
   if (!res.ok) {
     throw new Error('エラーが発生しました');
   }
-  const data = await res.json();
-  data.map((d) => {
-    return {
-      id: d.id,
-      name: d.name,
-    };
-  });
   return res.json();
 };
 

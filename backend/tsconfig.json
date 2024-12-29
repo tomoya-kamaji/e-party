@@ -7,7 +7,7 @@
     "esModuleInterop": true, // CommonJSモジュールとの互換性
     "allowSyntheticDefaultImports": true, // デフォルトインポートを許可
     "resolveJsonModule": true, // JSONファイルをインポート可能に
-    "baseUrl": ".", // ベースパスの設定
+    "baseUrl": "./", // ベースパスの設定
     "paths": {
       "@/*": ["src/*"]
     },
