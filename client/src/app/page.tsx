@@ -3,9 +3,9 @@
 import { useFetchUser } from '@/feature/user/api/useFetch';
 
 export const Home = () => {
-  const { data: user, error, isLoading } = useFetchUser();
+  const { data, error, isLoading } = useFetchUser();
 
-  console.log(user);
+  console.log();
 
   if (isLoading) {
     return (
