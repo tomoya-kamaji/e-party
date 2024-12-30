@@ -4,6 +4,9 @@ import { hc } from 'hono/client';
 import { HonoAppType } from '../../../../backend/src';
 import { getAuthToken } from '../supabase/client';
 
+/**
+ * Honoのクライアント
+ */
 export const honoClient = hc<HonoAppType>('http://localhost:3000', {
   fetch: async (input: RequestInfo | URL, init: RequestInit | undefined) => {
     const token = await getAuthToken();

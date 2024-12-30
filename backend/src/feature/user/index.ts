@@ -1,10 +1,14 @@
 // authors.ts
+import { AppContext, CURRENT_USER_KEY } from '@/middleware';
 import { Hono } from 'hono';
-import { getPokerUseCase } from '../poker/useCase/get';
 
-const userApp = new Hono().get('/current', async (c) => {
-  const res = await getPokerUseCase();
-  return c.json(res);
+const userApp = new Hono<AppContext>().get('/current', async (c) => {
+  // c.userを取得する
+  const currentUser = c.get(CURRENT_USER_KEY);
+  console.log('----j  -Auth-----');
+  console.log(currentUser);
+
+  return c.json(currentUser);
 });
 
 export default userApp;

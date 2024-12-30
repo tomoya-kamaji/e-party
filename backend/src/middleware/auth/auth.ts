@@ -1,5 +1,13 @@
 import { MiddlewareHandler } from 'hono';
-import { supabase } from '../util/supabase/client';
+import { supabase } from '../../util/supabase/client';
+import { convertCurrentUser, CurrentUser, setUserToContext } from './authUser';
+
+export const CURRENT_USER_KEY = 'currentUser';
+export interface AppContext {
+  Variables: {
+    [CURRENT_USER_KEY]: CurrentUser;
+  };
+}
 
 /**
  * Honoの認証ミドルウェア
@@ -21,7 +29,7 @@ export const authMiddleware: MiddlewareHandler = async (c, next) => {
   }
 
   // ユーザー情報をcontextに保存
-  c.set('user', data.user);
+  setUserToContext(c, convertCurrentUser(data.user));
 
   // 次の処理へ進む
   await next();
