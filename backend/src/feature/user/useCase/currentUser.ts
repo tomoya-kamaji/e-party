@@ -1,9 +1,11 @@
 import { IUserRepository } from '@/domain/user/repository';
 
-interface Result {
+interface Response {
   user: {
     id: string;
     name: string;
+    email: string;
+    imageUrl: string;
   };
 }
 
@@ -12,7 +14,7 @@ interface Result {
  */
 export const getCurrentUserUseCase =
   (userRepository: IUserRepository) =>
-  async (userId: string): Promise<Result> => {
+  async (userId: string): Promise<Response> => {
     const user = await userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
@@ -21,6 +23,8 @@ export const getCurrentUserUseCase =
       user: {
         id: user.id,
         name: user.name,
+        email: user.email,
+        imageUrl: user.imageUrl,
       },
     };
   };

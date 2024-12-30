@@ -1,23 +1,12 @@
 'use client';
 
-import { useFetchUser } from '@/feature/user/api/useFetch';
+import { useAuth } from '@/state/AuthContext';
 
 export const Home = () => {
-  const { data, error, isLoading } = useFetchUser();
-
-  console.log();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <h1 className="text-3xl font-bold text-gray-700">Loading...</h1>
-      </div>
-    );
-  }
-
+  const { user } = useAuth();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-gray-700">Welcome to the Dashboard</h1>
+      {user ? `Welcome, ${user.name}` : ''}
     </div>
   );
 };
