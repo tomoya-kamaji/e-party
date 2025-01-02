@@ -33,8 +33,9 @@ const Header = () => {
             <img
               src={user.imageUrl}
               alt="User Avatar"
-              className="border-service-stroke h-8 w-8 rounded-full border-2"
+              className="border-service-stroke h-12 w-12 rounded-full border-2"
             />
+            <div className="ml-2">{user.name}</div>
           </button>
 
           {/* Dropdown */}
