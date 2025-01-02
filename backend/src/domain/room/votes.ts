@@ -49,3 +49,14 @@ export const revealVote = (vote: VoteEntity): VoteEntity => {
     isRevealed: true,
   };
 };
+
+/**
+ * 投票結果をリセット
+ */
+export const resetVote = (vote: VoteEntity): VoteEntity => {
+  return {
+    ...vote,
+    value: '',
+    isRevealed: false,
+  };
+};

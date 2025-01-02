@@ -1,6 +1,6 @@
 import { TopicStatus } from '@prisma/client';
 import { v4 } from 'uuid';
-import { createVoteEntity, VoteEntity } from './votes';
+import { createVoteEntity, resetVote, revealVote, VoteEntity } from './votes';
 
 /**
  * トピック
@@ -47,3 +47,23 @@ export const addVote =
       votes: [...topic.votes, createVoteEntity({ topicId: topic.id, userId: participantId, value: '' })],
     };
   };
+
+/**
+ * 投票を公開
+ */
+export const revealVoteAll = (topic: TopicEntity): TopicEntity => {
+  return {
+    ...topic,
+    votes: topic.votes.map(revealVote),
+  };
+};
+
+/**
+ * 投票結果をリセット
+ */
+export const resetVoteAll = (topic: TopicEntity): TopicEntity => {
+  return {
+    ...topic,
+    votes: topic.votes.map(resetVote),
+  };
+};
