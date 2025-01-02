@@ -27,11 +27,11 @@ export const createTopicEntity = (participantIds: string[]): TopicEntity => {
 /**
  * 再構成
  */
-export const reconstructTopicEntity = (params: { id: string; status: TopicStatus }): TopicEntity => {
+export const reconstructTopicEntity = (params: { id: string; status: TopicStatus; votes: VoteEntity[] }): TopicEntity => {
   return {
     id: params.id,
     status: params.status,
-    votes: [],
+    votes: params.votes,
   };
 };
 
