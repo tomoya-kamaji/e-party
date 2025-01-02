@@ -30,7 +30,7 @@ export default defineConfig({
     'schema',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'react-refresh', 'import', '@typescript-eslint', 'unused-imports'],
+  plugins: ['react', 'react-refresh', 'import', '@typescript-eslint', 'unused-imports', 'tailwindcss'],
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: '.',

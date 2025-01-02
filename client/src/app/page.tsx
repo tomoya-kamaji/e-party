@@ -2,6 +2,9 @@
 
 import { useAuth } from '@/state/AuthContext';
 
+/**
+ * ホーム画面
+ */
 export const Home = () => {
   const { user } = useAuth();
   return (

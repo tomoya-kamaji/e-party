@@ -17,11 +17,11 @@ export const Login = () => {
   }, [session, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg p-8 max-w-sm w-full">
-        <div className="text-center mb-6">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-full max-w-sm rounded-lg bg-white p-8 shadow-md">
+        <div className="mb-6 text-center">
           <img src="/logo.svg" alt="App Logo" className="mx-auto h-12 w-auto" />
-          <h1 className="text-2xl font-bold text-gray-700 mt-4">Welcome to Our App</h1>
+          <h1 className="mt-4 text-2xl font-bold text-gray-700">Welcome to Our App</h1>
           <p className="text-gray-500">Please sign in to continue</p>
         </div>
         <Auth
