@@ -1,8 +1,10 @@
 'use client';
 
 import { useFetchUser } from '@/feature/user/api/useFetch';
+import { PATH_PAGE } from '@/util/route';
 import { supabase } from '@/util/supabase/client';
 import { Session } from '@supabase/supabase-js';
+import router from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
@@ -20,7 +22,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 
 /**
  * 認証プロバイダー
@@ -55,6 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = () => {
     supabase.auth.signOut();
+    router.push(PATH_PAGE.login);
   };
 
   return <AuthContext.Provider value={{ session, user, signOut }}>{children}</AuthContext.Provider>;
