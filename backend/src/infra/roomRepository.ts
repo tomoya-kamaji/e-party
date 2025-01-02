@@ -1,13 +1,18 @@
 import { IRoomRepository } from '@/domain/room/repository';
-import { RoomEntity } from '@/domain/room/room';
+import { reconstructRoomEntity, RoomEntity } from '@/domain/room/room';
+import { reconstructTopicEntity } from '@/domain/room/topic';
+import { reconstructVoteEntity } from '@/domain/room/votes';
 import { prisma } from '@/util/prisma';
 
+/**
+ * ルーム作成
+ */
 export const roomRepository: IRoomRepository = {
   async save(room: RoomEntity): Promise<RoomEntity> {
     // トランザクションを利用して Room、Topic、Votes を保存
-    return await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       // Room の upsert
-      const savedRoom = await tx.room.upsert({
+      await tx.room.upsert({
         where: { id: room.id },
         update: {
           name: room.name,
@@ -23,7 +28,7 @@ export const roomRepository: IRoomRepository = {
       });
 
       // Topic の upsert
-      const savedTopic = await tx.topic.upsert({
+      await tx.topic.upsert({
         where: { id: room.topic.id },
         update: {
           status: room.topic.status,
@@ -36,7 +41,7 @@ export const roomRepository: IRoomRepository = {
       });
 
       // Votes の保存
-      const savedVotes = await Promise.all(
+      await Promise.all(
         room.topic.votes.map((vote) =>
           tx.vote.upsert({
             where: { id: vote.id },
@@ -55,6 +60,11 @@ export const roomRepository: IRoomRepository = {
         )
       );
     });
+    const savedRoom = await this.findById(room.id);
+    if (!savedRoom) {
+      throw new Error('Room not found');
+    }
+    return savedRoom;
   },
 
   async findById(roomId: string): Promise<RoomEntity | undefined> {
@@ -66,36 +76,38 @@ export const roomRepository: IRoomRepository = {
             user: true,
           },
         },
-        topics: {
+        topic: {
           include: {
-            votes: true, // 各トピックに紐づく投票を取得
+            votes: true,
           },
         },
       },
     });
 
-    if (!room) {
+    if (!room || !room.topic) {
       return undefined;
     }
 
     // Prismaから取得したデータをRoomEntityに変換
-    return {
+    return reconstructRoomEntity({
       id: room.id,
       name: room.name,
       status: room.status,
       ownerId: room.owner_id,
       participantIds: room.room_user.map((user) => user.user.id), // 参加者IDリスト
-      topic: room.topics.map((topic) => ({
-        id: topic.id,
-        status: topic.status,
-        votes: topic.votes.map((vote) => ({
-          id: vote.id,
-          topicId: vote.topicId,
-          userId: vote.userId,
-          value: vote.value,
-          isRevealed: vote.isRevealed,
-        })),
-      }))[0], // 1つ目のトピックを返す (シングルの場合)
-    };
+      topic: reconstructTopicEntity({
+        id: room.topic.id,
+        status: room.topic.status,
+        votes: room.topic.votes.map((vote) =>
+          reconstructVoteEntity({
+            id: vote.id,
+            topicId: vote.topic_id,
+            userId: vote.user_id,
+            value: vote.value ?? '',
+            isRevealed: vote.is_revealed,
+          })
+        ),
+      }),
+    });
   },
 };
