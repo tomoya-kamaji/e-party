@@ -4,7 +4,7 @@ import { useFetchUser } from '@/feature/user/api/useFetch';
 import { PATH_PAGE } from '@/util/route';
 import { supabase } from '@/util/supabase/client';
 import { Session } from '@supabase/supabase-js';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
@@ -27,6 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  * 認証プロバイダー
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
   const [session, setSession] = useState<Session | undefined>(undefined);
   const [user, setUser] = useState<User | undefined>(undefined);
   const { data } = useFetchUser();
@@ -51,6 +52,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (data) {
       setUser(data.user);
+      router.push(PATH_PAGE.home);
+    }
+    // なければログイン画面へ
+    else {
+      router.push(PATH_PAGE.login);
     }
   }, [data]);
 

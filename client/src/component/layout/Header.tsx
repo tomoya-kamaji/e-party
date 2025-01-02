@@ -29,14 +29,15 @@ const Header = () => {
 
         {/* User Profile */}
         <div className="relative">
+          {/* ユーザー名 */}
           <button onClick={toggleDropdown} className="flex items-center focus:outline-none">
+            <div className="ml-2">{user.name}</div>
             <img
               src={user.imageUrl}
               alt="User Avatar"
               className="border-service-stroke h-8 w-8 rounded-full border-2"
             />
-          </button>
-
+          </button>{' '}
           {/* Dropdown */}
           {dropdownOpen && (
             <div className="bg-service-primary-background absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg">
