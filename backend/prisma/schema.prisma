@@ -19,9 +19,10 @@ model User {
     updated_at DateTime @updatedAt // 更新日時
     room_id    String? // 所属するルームのID
 
-    votes        Vote[] // ユーザーに紐づく投票
-    owned_rooms  Room[] @relation("RoomOwner") // オーナーとして作成したルーム
-    joined_rooms Room[] @relation("RoomUsers") // 参加しているルーム
+    votes       Vote[] // ユーザーに紐づく投票
+    owned_rooms Room[] @relation("RoomOwner") // オーナーとして作成したルーム
+
+    RoomUser RoomUser[]
 
     @@map("users")
 }
@@ -29,28 +30,43 @@ model User {
 model Room {
     id         String     @id @default(uuid()) // ルームのID
     name       String
-    status     RoomStatus @default(OPEN)
-    owner_id   String
+    status     RoomStatus @default(OPEN) // ルームの状態
+    owner_id   String // オーナーID
+    topic_id   String? // トピックID (1対1のリレーション)
     created_at DateTime   @default(now()) // 作成日時
     updated_at DateTime   @updatedAt // 更新日時
 
-    owner  User    @relation("RoomOwner", fields: [owner_id], references: [id]) // オーナーとのリレーション
-    users  User[]  @relation("RoomUsers") // 参加しているユーザー
-    topics Topic[]
+    owner     User       @relation("RoomOwner", fields: [owner_id], references: [id]) // オーナーとのリレーション
+    topic     Topic?     @relation(fields: [topic_id], references: [id])
+    room_user RoomUser[]
 
     @@map("rooms")
 }
 
+model RoomUser {
+    id        String   @id @default(uuid())
+    room_id   String
+    user_id   String
+    joined_at DateTime @default(now())
+
+    room Room @relation(fields: [room_id], references: [id], onDelete: Cascade)
+    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+    @@unique([room_id, user_id])
+    @@map("room_users")
+}
+
 model Topic {
-    id         String      @id
-    room_id    String // 所属するルームのID
-    status     TopicStatus @default(IN_PROGRESS)
-    created_at DateTime    @default(now())
-    updated_at DateTime    @updatedAt
+    id         String      @id @default(uuid()) // トピックのID
+    room_id    String
+    status     TopicStatus @default(IN_PROGRESS) // トピックの状態
+    created_at DateTime    @default(now()) // 作成日時
+    updated_at DateTime    @updatedAt // 更新日時
 
-    room  Room   @relation(fields: [room_id], references: [id])
     votes Vote[]
+    rooms Room[]
 
+    @@unique([room_id]) // トピックが1ルームに対して1つであることを保証
     @@map("topics")
 }
 
