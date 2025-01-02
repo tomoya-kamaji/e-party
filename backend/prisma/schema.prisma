@@ -10,13 +10,64 @@ datasource db {
 
 // ユーザー
 model User {
-    id        String   @id
-    auth_id   String   @unique
-    email     String   @unique
-    name      String
-    image_url String
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+    id         String   @id @default(uuid()) // ユーザーのID
+    auth_id    String   @unique // 認証用ID (外部IDなど)
+    email      String   @unique // ユーザーのメールアドレス
+    name       String // ユーザー名
+    image_url  String // プロフィール画像のURL
+    created_at DateTime @default(now()) // 作成日時
+    updated_at DateTime @updatedAt // 更新日時
+    room_id    String? // 所属するルームのID
 
-    @@map("users")
+    votes        Vote[] // ユーザーに紐づく投票
+    owned_rooms  Room[] @relation("RoomOwner") // オーナーとして作成したルーム
+    joined_rooms Room[] @relation("RoomUsers") // 参加しているルーム
+
+    @@map("users") // テーブル名を "users" にマッピング
+}
+
+model Room {
+    id         String     @id @default(uuid()) // ルームのID
+    name       String
+    status     RoomStatus @default(OPEN)
+    owner_id   String
+    created_at DateTime   @default(now()) // 作成日時
+    updated_at DateTime   @updatedAt // 更新日時
+
+    owner  User    @relation("RoomOwner", fields: [owner_id], references: [id]) // オーナーとのリレーション
+    users  User[]  @relation("RoomUsers") // 参加しているユーザー
+    topics Topic[]
+}
+
+model Topic {
+    id         String      @id
+    room_id    String // 所属するルームのID
+    status     TopicStatus @default(IN_PROGRESS)
+    created_at DateTime    @default(now())
+    updated_at DateTime    @updatedAt
+
+    room  Room   @relation(fields: [room_id], references: [id])
+    votes Vote[]
+}
+
+model Vote {
+    id          String   @id
+    topic_id    String // 対象のお題のID
+    user_id     String // 投票したユーザーのID
+    value       String? // 投票内容 (カードの値: 例 1, 2, 3, "?" など)
+    is_revealed Boolean  @default(false) // 投票が公開されたかどうか
+    created_at  DateTime @default(now()) // 投票作成日時
+
+    topic Topic @relation(fields: [topic_id], references: [id]) // Topicへのリレーション
+    user  User  @relation(fields: [user_id], references: [id]) // Userへのリレーション
+}
+
+enum RoomStatus {
+    OPEN // ルームが開いていて、参加可能
+    CLOSED // ルームが閉じていて、参加不可
+}
+
+enum TopicStatus {
+    IN_PROGRESS // お題が進行中
+    COMPLETED // お題が完了
 }
