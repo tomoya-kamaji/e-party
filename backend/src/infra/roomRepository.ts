@@ -57,10 +57,15 @@ export const roomRepository: IRoomRepository = {
     });
   },
 
-  async findById(roomId: string): Promise<RoomEntity | null> {
+  async findById(roomId: string): Promise<RoomEntity | undefined> {
     const room = await prisma.room.findUnique({
       where: { id: roomId },
       include: {
+        room_user: {
+          include: {
+            user: true,
+          },
+        },
         topics: {
           include: {
             votes: true, // 各トピックに紐づく投票を取得
@@ -70,7 +75,7 @@ export const roomRepository: IRoomRepository = {
     });
 
     if (!room) {
-      return null;
+      return undefined;
     }
 
     // Prismaから取得したデータをRoomEntityに変換
@@ -79,7 +84,7 @@ export const roomRepository: IRoomRepository = {
       name: room.name,
       status: room.status,
       ownerId: room.owner_id,
-      participantIds: room.users.map((user) => user.id), // 参加者IDリスト
+      participantIds: room.room_user.map((user) => user.user.id), // 参加者IDリスト
       topic: room.topics.map((topic) => ({
         id: topic.id,
         status: topic.status,

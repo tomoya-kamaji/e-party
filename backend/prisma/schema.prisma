@@ -30,13 +30,14 @@ model User {
 model Room {
     id         String     @id @default(uuid()) // ルームのID
     name       String
-    status     RoomStatus @default(OPEN)
-    owner_id   String
+    status     RoomStatus @default(OPEN) // ルームの状態
+    owner_id   String // オーナーID
+    topic_id   String? // トピックID (1対1のリレーション)
     created_at DateTime   @default(now()) // 作成日時
     updated_at DateTime   @updatedAt // 更新日時
 
     owner     User       @relation("RoomOwner", fields: [owner_id], references: [id]) // オーナーとのリレーション
-    topics    Topic[]
+    topic     Topic?     @relation(fields: [topic_id], references: [id])
     room_user RoomUser[]
 
     @@map("rooms")
@@ -56,15 +57,16 @@ model RoomUser {
 }
 
 model Topic {
-    id         String      @id
-    room_id    String // 所属するルームのID
-    status     TopicStatus @default(IN_PROGRESS)
-    created_at DateTime    @default(now())
-    updated_at DateTime    @updatedAt
+    id         String      @id @default(uuid()) // トピックのID
+    room_id    String
+    status     TopicStatus @default(IN_PROGRESS) // トピックの状態
+    created_at DateTime    @default(now()) // 作成日時
+    updated_at DateTime    @updatedAt // 更新日時
 
-    room  Room   @relation(fields: [room_id], references: [id])
-    votes Vote[]
+    Vote Vote[]
+    Room Room[]
 
+    @@unique([room_id]) // トピックが1ルームに対して1つであることを保証
     @@map("topics")
 }
 
