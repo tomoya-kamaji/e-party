@@ -23,7 +23,7 @@ model User {
     owned_rooms  Room[] @relation("RoomOwner") // オーナーとして作成したルーム
     joined_rooms Room[] @relation("RoomUsers") // 参加しているルーム
 
-    @@map("users") // テーブル名を "users" にマッピング
+    @@map("users")
 }
 
 model Room {
@@ -37,6 +37,8 @@ model Room {
     owner  User    @relation("RoomOwner", fields: [owner_id], references: [id]) // オーナーとのリレーション
     users  User[]  @relation("RoomUsers") // 参加しているユーザー
     topics Topic[]
+
+    @@map("rooms")
 }
 
 model Topic {
@@ -48,6 +50,8 @@ model Topic {
 
     room  Room   @relation(fields: [room_id], references: [id])
     votes Vote[]
+
+    @@map("topics")
 }
 
 model Vote {
@@ -60,6 +64,8 @@ model Vote {
 
     topic Topic @relation(fields: [topic_id], references: [id]) // Topicへのリレーション
     user  User  @relation(fields: [user_id], references: [id]) // Userへのリレーション
+
+    @@map("votes")
 }
 
 enum RoomStatus {
