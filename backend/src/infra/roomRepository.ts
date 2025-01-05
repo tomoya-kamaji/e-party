@@ -4,10 +4,7 @@ import { reconstructTopicEntity } from '@/domain/room/topic';
 import { reconstructVoteEntity } from '@/domain/room/votes';
 import { prisma } from '@/util/prisma';
 
-/**
- * ルーム作成
- */
-export const roomRepository: IRoomRepository = {
+export const RoomRepository: IRoomRepository = {
   async save(room: RoomEntity): Promise<RoomEntity> {
     // トランザクションを利用して Room、Topic、Votes を保存
     await prisma.$transaction(async (tx) => {
