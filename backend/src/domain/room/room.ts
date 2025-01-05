@@ -17,7 +17,6 @@ export interface RoomEntity {
  */
 export const createRoomEntity = (params: {
   name: string;
-  status: RoomStatus;
   ownerId: string;
   participantIds: string[];
 }): RoomEntity => {
