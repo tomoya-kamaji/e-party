@@ -2,7 +2,7 @@ import { reconstructUserEntity, UserEntity } from '@/domain/user';
 import { IUserRepository } from '@/domain/user/repository';
 import { prisma } from '@/util/prisma';
 
-const userRepository: IUserRepository = {
+export const UserRepository: IUserRepository = {
   async findById(id: string): Promise<UserEntity | undefined> {
     return prisma.user
       .findUnique({
@@ -23,5 +23,3 @@ const userRepository: IUserRepository = {
       });
   },
 };
-
-export { userRepository };
