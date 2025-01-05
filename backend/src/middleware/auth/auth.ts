@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@/util/exception';
 import { MiddlewareHandler } from 'hono';
 import { supabase } from '../../util/supabase/client';
 import { convertCurrentUser, CurrentUser } from './authUser';
@@ -14,18 +15,16 @@ export interface AppContext {
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   const authHeader = c.req.header('Authorization');
-
   if (!authHeader) {
-    return c.json({ error: 'Authorization header is missing' }, 401);
+    throw UnauthorizedException('Authorization header is missing');
   }
 
   const token = authHeader.split(' ')[1]; // Bearerトークンを抽出
 
   // トークンを検証してユーザー情報を取得
   const { data, error } = await supabase.auth.getUser(token);
-
   if (error || !data.user) {
-    return c.json({ error: error?.message || 'Invalid token' }, 401);
+    throw UnauthorizedException(`authMiddleware -> Error: ${error?.message}`);
   }
 
   // ユーザー情報をcontextに保存
