@@ -4,9 +4,11 @@ import { Hono } from 'hono';
 import pokerApp from './feature/poker';
 import userApp from './feature/user';
 import { authMiddleware, loggingMiddleware, originMiddleware } from './middleware';
+import { errorMiddleware } from './middleware/exception';
 
 const app = new Hono()
   .basePath('/api')
+  .onError(errorMiddleware)
   .use('*', originMiddleware)
   .use('*', loggingMiddleware)
   .get('/health', (c) => c.json('ok'))

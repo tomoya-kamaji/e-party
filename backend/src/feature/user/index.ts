@@ -11,7 +11,7 @@ const userApp = new Hono<AppContext>()
   .get('/current', async (c) => {
     const currentUser = c.get(CURRENT_USER_KEY);
     const useCase = getCurrentUserUseCase(UserRepository);
-    const result = await useCase(currentUser.id);
+    const result = await useCase.execute(currentUser.id);
     return c.json(result);
   });
 

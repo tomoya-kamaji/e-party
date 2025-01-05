@@ -1,8 +1,10 @@
 'use client';
 
 import { useFetchUser } from '@/feature/user/api/useFetch';
+import { PATH_PAGE } from '@/util/route';
 import { supabase } from '@/util/supabase/client';
 import { Session } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
@@ -21,14 +23,14 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
 /**
  * 認証プロバイダー
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | undefined>(undefined);
   const [user, setUser] = useState<User | undefined>(undefined);
-  const { data } = useFetchUser();
+  const { data, error: fetchError } = useFetchUser();
+  const router = useRouter();
 
   // セッションの変化を監視
   useEffect(() => {
@@ -46,16 +48,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
+  const signOut = () => {
+    supabase.auth.signOut();
+  };
+
   // ユーザー情報の取得
   useEffect(() => {
     if (data) {
       setUser(data.user);
     }
-  }, [data]);
-
-  const signOut = () => {
-    supabase.auth.signOut();
-  };
+    if (fetchError) {
+      signOut();
+      router.push(PATH_PAGE.login);
+    }
+  }, [data, fetchError]);
 
   return <AuthContext.Provider value={{ session, user, signOut }}>{children}</AuthContext.Provider>;
 };

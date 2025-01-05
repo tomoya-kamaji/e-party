@@ -1,4 +1,5 @@
 import { IUserRepository } from '@/domain/user/repository';
+import { UnauthorizedException } from '@/util/exception';
 
 interface Response {
   user: {
@@ -12,12 +13,11 @@ interface Response {
 /**
  * 現在のログインしているユーザーを取得するユースケース
  */
-export const getCurrentUserUseCase =
-  (userRepository: IUserRepository) =>
-  async (userId: string): Promise<Response> => {
+export const getCurrentUserUseCase = (userRepository: IUserRepository) => ({
+  execute: async (userId: string): Promise<Response> => {
     const user = await userRepository.findById(userId);
     if (!user) {
-      throw new Error('User not found');
+      throw UnauthorizedException('User not found');
     }
     return {
       user: {
@@ -27,4 +27,5 @@ export const getCurrentUserUseCase =
         imageUrl: user.imageUrl,
       },
     };
-  };
+  },
+});
