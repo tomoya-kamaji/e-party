@@ -1,9 +1,36 @@
+import { RoomRepository } from '@/infra/roomRepository';
+import { AppContext, CURRENT_USER_KEY } from '@/middleware';
+import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { getPokerUseCase } from './useCase';
+import { z } from 'zod';
+import { CreateRoomUseCase, GetRoomListUseCase } from './useCase';
 
-const roomApp = new Hono().get('/', async (c) => {
-  const res = await getPokerUseCase();
-  return c.json(res);
-});
+/**
+ * ルームAPI
+ */
+const roomApp = new Hono<AppContext>()
+  // ルーム一覧を取得する
+  .get('', async (c) => {
+    const currentUser = c.get(CURRENT_USER_KEY);
+    const res = await GetRoomListUseCase(RoomRepository).execute(currentUser.id);
+    return c.json(res);
+  })
+  // ルームを作成する
+  .post(
+    '/',
+    zValidator(
+      'json',
+      z.object({
+        name: z.string().optional(),
+      })
+    ),
+    async (c) => {
+      const { name } = c.req.valid('json');
+      const currentUser = c.get(CURRENT_USER_KEY);
+
+      const res = await CreateRoomUseCase(RoomRepository).execute(name || '', currentUser.id);
+      return c.json(res);
+    }
+  );
 
 export default roomApp;

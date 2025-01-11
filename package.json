@@ -3,7 +3,9 @@
   "scripts": {
     "dev": "concurrently \"pnpm run dev:client\" \"pnpm run dev:backend\"",
     "dev:client": "pnpm --filter client dev",
-    "dev:backend": "pnpm --filter backend dev"
+    "dev:backend": "pnpm --filter backend dev",
+    "prisma:generate": "pnpm --filter backend prisma:generate",
+    "prisma:migrate": "pnpm --filter backend prisma:migrate"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
