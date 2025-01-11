@@ -7,7 +7,6 @@ interface GetRoomResponse {
     name: string;
     status: RoomStatus;
     ownerId: string;
-    topicId: string;
   }[];
 }
 
@@ -26,7 +25,6 @@ export const GetRoomListUseCase = (roomRepository: IRoomRepository) => ({
         name: room.name,
         status: room.status,
         ownerId: room.ownerId,
-        topicId: room.topic.id,
       })),
     };
   },

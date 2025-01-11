@@ -1,10 +1,11 @@
-import Header from '@/component/layout/Header';
+import Header from '@/component/Header';
 import { AuthProvider } from '@/state/AuthContext';
 import clsx from 'clsx';
 import { Noto_Sans_JP } from 'next/font/google';
 import React from 'react';
 
 import '../styles/globals.css';
+import { SnackbarProvider } from '@/component/SnackBar';
 
 export const metadata = {
   title: 'Next.js',
@@ -23,10 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja" className={clsx(notoSansJP.variable, 'font-sans')}>
       <body>
-        <AuthProvider>
-          <Header />
-          {children}
-        </AuthProvider>
+        <SnackbarProvider>
+          <AuthProvider>
+            <Header />
+            {children}
+          </AuthProvider>
+        </SnackbarProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 
 export interface VoteEntity {
   id: string;
-  topicId: string;
+  roomId: string;
   userId: string;
   value: string;
   isRevealed: boolean;
@@ -11,10 +11,10 @@ export interface VoteEntity {
 /**
  * 生成
  */
-export const createVoteEntity = (params: { topicId: string; userId: string; value: string }): VoteEntity => {
+export const createVoteEntity = (params: { roomId: string; userId: string; value: string }): VoteEntity => {
   return {
     id: v4(),
-    topicId: params.topicId,
+    roomId: params.roomId,
     userId: params.userId,
     value: params.value,
     isRevealed: false,
@@ -26,14 +26,14 @@ export const createVoteEntity = (params: { topicId: string; userId: string; valu
  */
 export const reconstructVoteEntity = (params: {
   id: string;
-  topicId: string;
+  roomId: string;
   userId: string;
   value: string;
   isRevealed: boolean;
 }): VoteEntity => {
   return {
     id: params.id,
-    topicId: params.topicId,
+    roomId: params.roomId,
     userId: params.userId,
     value: params.value,
     isRevealed: params.isRevealed,

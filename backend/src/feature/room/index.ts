@@ -17,7 +17,7 @@ const roomApp = new Hono<AppContext>()
   })
   // ルーム作成API
   .post(
-    '/',
+    '',
     zValidator(
       'json',
       z.object({

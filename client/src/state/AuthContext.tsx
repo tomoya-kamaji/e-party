@@ -1,6 +1,6 @@
 'use client';
 
-import { useFetchUser } from '@/feature/user/api/useFetch';
+import { useFetchUser } from '@/repository/api/user/useFetch';
 import { PATH_PAGE } from '@/util/route';
 import { supabase } from '@/util/supabase/client';
 import { Session } from '@supabase/supabase-js';

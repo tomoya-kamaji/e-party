@@ -13,7 +13,7 @@ export type HonoPathType<T> = T extends (args: { path: infer P }, options?: any)
 /**
  * Honoのボディの型を取得する
  */
-export type HonoBodyType<T> = T extends (args: { body: infer B }, options?: any) => any ? B : never;
+export type HonoBodyType<T> = T extends (args: { json: infer B }, options?: any) => any ? B : never;
 
 /**
  * Honoのレスポンスの型を取得する
