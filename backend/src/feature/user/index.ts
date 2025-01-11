@@ -14,5 +14,6 @@ const userApp = new Hono<AppContext>()
     const result = await useCase.execute(currentUser.id);
     return c.json(result);
   });
+  
 
 export default userApp;
