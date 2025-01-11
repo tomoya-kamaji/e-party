@@ -7,7 +7,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export const Login = () => {
+const Login = () => {
   const { session } = useAuth();
   const router = useRouter();
   useEffect(() => {
