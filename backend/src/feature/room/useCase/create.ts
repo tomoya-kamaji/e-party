@@ -15,7 +15,7 @@ interface CreateRoomResponse {
 /**
  * 部屋を作成する
  */
-const createRoomUseCase = (roomRepository: IRoomRepository) => ({
+export const CreateRoomUseCase = (roomRepository: IRoomRepository) => ({
   execute: async (name: string, ownerId: string): Promise<CreateRoomResponse> => {
     const room = createRoomEntity({
       name: name,
@@ -35,5 +35,3 @@ const createRoomUseCase = (roomRepository: IRoomRepository) => ({
     };
   },
 });
-
-export { createRoomUseCase };

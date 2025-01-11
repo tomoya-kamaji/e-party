@@ -3,6 +3,21 @@ import { reconstructRoomEntity, RoomEntity } from '@/domain/room/room';
 import { reconstructTopicEntity } from '@/domain/room/topic';
 import { reconstructVoteEntity } from '@/domain/room/votes';
 import { prisma } from '@/util/prisma';
+import { Prisma } from '@prisma/client';
+type RoomWithDetails = Prisma.RoomGetPayload<{
+  include: {
+    room_user: {
+      include: {
+        user: true;
+      };
+    };
+    topic: {
+      include: {
+        votes: true;
+      };
+    };
+  };
+}>;
 
 export const RoomRepository: IRoomRepository = {
   async save(room: RoomEntity): Promise<RoomEntity> {
@@ -86,25 +101,51 @@ export const RoomRepository: IRoomRepository = {
     }
 
     // Prismaから取得したデータをRoomEntityに変換
-    return reconstructRoomEntity({
-      id: room.id,
-      name: room.name,
-      status: room.status,
-      ownerId: room.owner_id,
-      participantIds: room.room_user.map((user) => user.user.id), // 参加者IDリスト
-      topic: reconstructTopicEntity({
-        id: room.topic.id,
-        status: room.topic.status,
-        votes: room.topic.votes.map((vote) =>
-          reconstructVoteEntity({
-            id: vote.id,
-            topicId: vote.topic_id,
-            userId: vote.user_id,
-            value: vote.value ?? '',
-            isRevealed: vote.is_revealed,
-          })
-        ),
-      }),
-    });
+    return convertToRoomEntity(room);
   },
+
+  async findByUserId(userId: string): Promise<RoomEntity[]> {
+    const rooms = await prisma.room.findMany({
+      where: { room_user: { some: { user_id: userId } } },
+      include: {
+        room_user: {
+          include: {
+            user: true,
+          },
+        },
+        topic: {
+          include: {
+            votes: true,
+          },
+        },
+      },
+    });
+    return rooms.map((room) => convertToRoomEntity(room));
+  },
+};
+
+const convertToRoomEntity = (room: RoomWithDetails): RoomEntity => {
+  if (!room.topic) {
+    throw new Error('Topic is null');
+  }
+  return reconstructRoomEntity({
+    id: room.id,
+    name: room.name,
+    status: room.status,
+    ownerId: room.owner_id,
+    participantIds: room.room_user.map((user) => user.user.id),
+    topic: reconstructTopicEntity({
+      id: room.topic.id,
+      status: room.topic.status,
+      votes: room.topic.votes.map((vote) =>
+        reconstructVoteEntity({
+          id: vote.id,
+          topicId: vote.topic_id,
+          userId: vote.user_id,
+          value: vote.value ?? '',
+          isRevealed: vote.is_revealed,
+        })
+      ),
+    }),
+  });
 };

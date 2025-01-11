@@ -3,22 +3,34 @@ import { AppContext, CURRENT_USER_KEY } from '@/middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { createRoomUseCase } from './useCase/create';
-
-// ルームを作成する
-const createRoomSchema = z.object({
-  name: z.string().optional(),
-});
+import { CreateRoomUseCase, GetRoomListUseCase } from './useCase';
 
 /**
  * ルームAPI
  */
-const roomApp = new Hono<AppContext>().post('/', zValidator('json', createRoomSchema), async (c) => {
-  const { name } = c.req.valid('json');
-  const currentUser = c.get(CURRENT_USER_KEY);
+const roomApp = new Hono<AppContext>()
+  // ルーム一覧を取得する
+  .get('', async (c) => {
+    const currentUser = c.get(CURRENT_USER_KEY);
+    const res = await GetRoomListUseCase(RoomRepository).execute(currentUser.id);
+    return c.json(res);
+  })
+  // ルームを作成する
+  .post(
+    '/',
+    zValidator(
+      'json',
+      z.object({
+        name: z.string().optional(),
+      })
+    ),
+    async (c) => {
+      const { name } = c.req.valid('json');
+      const currentUser = c.get(CURRENT_USER_KEY);
 
-  const res = await createRoomUseCase(RoomRepository).execute(name || '', currentUser.id);
-  return c.json(res);
-});
+      const res = await CreateRoomUseCase(RoomRepository).execute(name || '', currentUser.id);
+      return c.json(res);
+    }
+  );
 
 export default roomApp;
