@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { mutate, useSWRConfig } from 'swr';
 import { fetchRoomKey } from './useFetch';
 
-const onCreateRoom = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) => {
+const onCreate = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) => {
   return honoClient.api.rooms
     .$post({
       json,
@@ -32,14 +32,14 @@ export const useRoomAction = () => {
   /**
    * 担当サービスの更新
    */
-  const createRoom = useCallback(
+  const create = useCallback(
     async (requestParameters: HonoBodyType<typeof honoClient.api.rooms.$post>) => {
-      return onCreateRoom(requestParameters);
+      return onCreate(requestParameters);
     },
     [mutate]
   );
 
   return {
-    createRoom,
+    create,
   };
 };

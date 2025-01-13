@@ -13,12 +13,12 @@ const RoomList = () => {
   // 部屋一覧取得
   const { data, error, isLoading } = useFetchRoom();
 
-  const { createRoom } = useRoomAction();
+  const { create } = useRoomAction();
 
   // 新しい部屋作成
   const handleCreateRoom = async () => {
     try {
-      const data = await createRoom({ name: roomName });
+      const data = await create({ name: roomName });
       if (data.room) {
         setRoomLink(data.room.id);
         showSnackbar('部屋を作成しました', 'success');
