@@ -49,7 +49,6 @@ export const RoomRepository: IRoomRepository = {
         )
       );
     });
-    console.log('savedRoom', room.id);
     const savedRoom = await this.findById(room.id);
     if (!savedRoom) {
       throw new Error('Error: Room Create Failed');
@@ -64,8 +63,6 @@ export const RoomRepository: IRoomRepository = {
         votes: true,
       },
     });
-
-    console.log('findById', room);
 
     if (!room) {
       return undefined;
