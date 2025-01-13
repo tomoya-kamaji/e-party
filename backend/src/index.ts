@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server';
 import 'dotenv/config';
 import { Hono } from 'hono';
-import pokerApp from './feature/poker';
+import roomApp from './feature/room';
 import userApp from './feature/user';
 import { authMiddleware, loggingMiddleware, originMiddleware } from './middleware';
 import { errorMiddleware } from './middleware/exception';
@@ -14,8 +14,8 @@ const app = new Hono()
   .get('/health', (c) => c.json('ok'))
   // 認証ミドルウェア
   .use('*', authMiddleware)
-  .route('/pokers', pokerApp)
-  .route('/users', userApp);
+  .route('/users', userApp)
+  .route('/rooms', roomApp);
 
 // サーバー起動
 const port = 3000;

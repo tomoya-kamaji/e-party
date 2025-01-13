@@ -9,15 +9,15 @@ import { CreateRoomUseCase, GetRoomListUseCase } from './useCase';
  * ルームAPI
  */
 const roomApp = new Hono<AppContext>()
-  // ルーム一覧を取得する
+  // ルーム一覧取得API
   .get('', async (c) => {
     const currentUser = c.get(CURRENT_USER_KEY);
     const res = await GetRoomListUseCase(RoomRepository).execute(currentUser.id);
     return c.json(res);
   })
-  // ルームを作成する
+  // ルーム作成API
   .post(
-    '/',
+    '',
     zValidator(
       'json',
       z.object({

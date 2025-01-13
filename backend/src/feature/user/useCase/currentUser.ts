@@ -1,5 +1,4 @@
 import { IUserRepository } from '@/domain/user/repository';
-import { UnauthorizedException } from '@/util/exception';
 
 interface Response {
   user: {
@@ -13,11 +12,13 @@ interface Response {
 /**
  * 現在のログインしているユーザーを取得するユースケース
  */
-export const getCurrentUserUseCase = (userRepository: IUserRepository) => ({
+export const GetCurrentUserUseCase = (userRepository: IUserRepository) => ({
   execute: async (userId: string): Promise<Response> => {
+    console.log('userId', userId);
     const user = await userRepository.findById(userId);
     if (!user) {
-      throw UnauthorizedException('User not found');
+      // throw UnauthorizedException('User not found');
+      throw new Error('User not found');
     }
     return {
       user: {

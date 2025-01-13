@@ -14,7 +14,7 @@ const fetchUser = async () => {
 };
 
 /**
- * ポーカーのデータを取得する
+ * ログインユーザーのデータを取得する
  */
 export const useFetchUser = () => {
   const { data, error, isLoading, mutate } = useSWR(key, fetchUser);

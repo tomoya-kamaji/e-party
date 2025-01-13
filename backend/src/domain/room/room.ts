@@ -1,32 +1,26 @@
 import { RoomStatus } from '@prisma/client';
 import { v4 } from 'uuid';
-import { addVote, createTopicEntity, TopicEntity } from './topic';
+import { createVoteEntity, VoteEntity } from './votes';
 
 export interface RoomEntity {
   id: string;
   name: string;
   status: RoomStatus;
-  topic: TopicEntity;
   ownerId: string;
-  // 参加者
-  participantIds: string[];
+  // 参加者分作る
+  votes: VoteEntity[];
 }
 
 /**
  * 生成
  */
-export const createRoomEntity = (params: {
-  name: string;
-  ownerId: string;
-  participantIds: string[];
-}): RoomEntity => {
+export const createRoomEntity = (params: { name: string; ownerId: string; participantIds: string[] }): RoomEntity => {
   return {
     id: v4(),
     name: params.name,
     status: RoomStatus.OPEN,
-    topic: createTopicEntity(params.participantIds),
     ownerId: params.ownerId,
-    participantIds: params.participantIds,
+    votes: [],
   };
 };
 
@@ -37,17 +31,15 @@ export const reconstructRoomEntity = (params: {
   id: string;
   name: string;
   status: RoomStatus;
-  topic: TopicEntity;
   ownerId: string;
-  participantIds: string[];
+  votes: VoteEntity[];
 }): RoomEntity => {
   return {
     id: params.id,
     name: params.name,
     status: params.status,
-    topic: params.topic,
     ownerId: params.ownerId,
-    participantIds: params.participantIds,
+    votes: params.votes,
   };
 };
 
@@ -58,11 +50,9 @@ export const reconstructRoomEntity = (params: {
 export const addParticipant =
   (room: RoomEntity) =>
   (participantId: string): RoomEntity => {
-    const topic = addVote(room.topic)(participantId);
     return {
       ...room,
-      topic,
-      participantIds: [...room.participantIds, participantId],
+      votes: [...room.votes, createVoteEntity({ roomId: room.id, userId: participantId, value: '' })],
     };
   };
 
