@@ -14,7 +14,7 @@ const app = new Hono()
   .get('/health', (c) => c.json('ok'))
   // 認証ミドルウェア
   .use('*', authMiddleware)
-  .route('/users', userApp)
+  .route('/users', userApp) 
   .route('/rooms', roomApp);
 
 // サーバー起動

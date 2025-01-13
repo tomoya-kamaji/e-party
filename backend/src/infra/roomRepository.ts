@@ -26,6 +26,7 @@ export const RoomRepository: IRoomRepository = {
           name: room.name,
           status: room.status,
           owner_id: room.ownerId,
+          created_at: room.createdAt,
         },
       });
 
@@ -98,5 +99,6 @@ const convertToRoomEntity = (room: RoomWithDetails): RoomEntity => {
         isRevealed: vote.is_revealed,
       })
     ),
+    createdAt: room.created_at,
   });
 };

@@ -9,19 +9,23 @@ export interface RoomEntity {
   ownerId: string;
   // 参加者分作る
   votes: VoteEntity[];
+  createdAt: Date;
 }
 
 /**
  * 生成
  */
-export const createRoomEntity = (params: { name: string; ownerId: string; participantIds: string[] }): RoomEntity => {
+export const createRoomEntity = (params: { name?: string; ownerId: string; participantIds: string[] }): RoomEntity => {
+  // もしもnameがなかったら、タイムスタンプを名前にする
+  const name = params.name ? params.name : `Room-${new Date().getTime()}`;
   const roomId = v4();
   return {
     id: roomId,
-    name: params.name,
+    name,
     status: RoomStatus.OPEN,
     ownerId: params.ownerId,
     votes: [createVoteEntity({ roomId: roomId, userId: params.ownerId })],
+    createdAt: new Date(),
   };
 };
 
@@ -34,6 +38,7 @@ export const reconstructRoomEntity = (params: {
   status: RoomStatus;
   ownerId: string;
   votes: VoteEntity[];
+  createdAt: Date;
 }): RoomEntity => {
   return {
     id: params.id,
@@ -41,6 +46,7 @@ export const reconstructRoomEntity = (params: {
     status: params.status,
     ownerId: params.ownerId,
     votes: params.votes,
+    createdAt: params.createdAt,
   };
 };
 
