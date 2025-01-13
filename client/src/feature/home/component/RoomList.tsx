@@ -1,5 +1,6 @@
 import CustomTable from '@/component/Table';
 import { formatDateForDisplay } from '@/util/date';
+import { PATH_PAGE } from '@/util/route';
 
 interface RoomListProps {
   rooms: { id: string; name: string; createdAt: string }[];
@@ -9,7 +10,7 @@ const RoomList = ({ rooms }: RoomListProps) => {
   const headers = ['ルーム名', '作成日時'];
   const data = rooms.map((room) => ({
     ルーム名: (
-      <a href={`/rooms/${room.id}`} className="font-medium text-blue-500 hover:underline">
+      <a href={PATH_PAGE.roomDetail(room.id)} className="font-medium text-blue-500 hover:underline">
         {room.name}
       </a>
     ),
