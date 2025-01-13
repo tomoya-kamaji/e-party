@@ -8,7 +8,6 @@ interface CreateRoomResponse {
     name: string;
     status: RoomStatus;
     ownerId: string;
-    topicId: string;
   };
 }
 
@@ -30,7 +29,6 @@ export const CreateRoomUseCase = (roomRepository: IRoomRepository) => ({
         name: room.name,
         status: room.status,
         ownerId: room.ownerId,
-        topicId: room.topic.id,
       },
     };
   },
