@@ -16,7 +16,7 @@ const fetchRoom = async () => {
 /**
  * ルームのデータを取得する
  */
-export const useFetchRooms = () => {
+export const useFetchRoom = () => {
   const { data, error, isLoading, mutate } = useSWR(fetchRoomKey, fetchRoom);
 
   return {

@@ -1,5 +1,5 @@
 import { useSnackbar } from '@/component/SnackBar';
-import { useCreateRoom, useFetchRooms } from '@/repository/api/room';
+import { useFetchRoom, useRoomAction } from '@/repository/api/room';
 import { useState } from 'react';
 
 const RoomList = () => {
@@ -11,12 +11,14 @@ const RoomList = () => {
   const [roomLink, setRoomLink] = useState('');
 
   // 部屋一覧取得
-  const { data, error, isLoading } = useFetchRooms();
+  const { data, error, isLoading } = useFetchRoom();
+
+  const { createRoom } = useRoomAction();
 
   // 新しい部屋作成
   const handleCreateRoom = async () => {
     try {
-      const data = await useCreateRoom({ name: roomName });
+      const data = await createRoom({ name: roomName });
       if (data.room) {
         setRoomLink(data.room.id);
         showSnackbar('部屋を作成しました', 'success');
