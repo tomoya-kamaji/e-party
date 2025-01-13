@@ -16,7 +16,7 @@ interface CreateRoomResponse {
  * 部屋を作成する
  */
 export const CreateRoomUseCase = (roomRepository: IRoomRepository) => ({
-  execute: async (name: string, ownerId: string): Promise<CreateRoomResponse> => {
+  execute: async (name: string | undefined, ownerId: string): Promise<CreateRoomResponse> => {
     const room = createRoomEntity({
       name: name,
       ownerId: ownerId,

@@ -17,8 +17,6 @@ export const Home = () => {
 
   // ルーム 名
   const [roomName, setRoomName] = useState('');
-  // ルームリンク
-  const [roomLink, setRoomLink] = useState('');
 
   // ルーム一覧取得
   const { data, isLoading } = useFetchRoom();
@@ -30,7 +28,6 @@ export const Home = () => {
     try {
       const data = await create({ name: roomName });
       if (data.room) {
-        setRoomLink(data.room.id);
         showSnackbar('ルームを作成しました', 'success');
       }
     } catch (error) {
@@ -39,7 +36,7 @@ export const Home = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
       {isLoading ? (
         <LoadingIndicator />
       ) : (
@@ -47,7 +44,6 @@ export const Home = () => {
           {/* ルーム作成フォーム */}
           <CreateRoomForm
             roomName={roomName}
-            roomLink={roomLink}
             setRoomName={(roomName) => setRoomName(roomName)}
             handleCreateRoom={handleCreateRoom}
           />

@@ -1,11 +1,10 @@
 interface CreateRoomFormProps {
   roomName: string;
-  roomLink: string;
   setRoomName: (roomName: string) => void;
   handleCreateRoom: () => void;
 }
 
-const CreateRoomForm = ({ roomName, setRoomName, handleCreateRoom, roomLink }: CreateRoomFormProps) => (
+const CreateRoomForm = ({ roomName, setRoomName, handleCreateRoom }: CreateRoomFormProps) => (
   <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
     <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">ルームを作成</h1>
     <div className="mb-4">
@@ -27,14 +26,6 @@ const CreateRoomForm = ({ roomName, setRoomName, handleCreateRoom, roomLink }: C
     >
       作成
     </button>
-    {roomLink && (
-      <div className="mt-6 text-center">
-        <p className="text-gray-700">ルームリンクが作成されました:</p>
-        <a href={`/rooms/${roomLink}`} className="font-medium text-blue-500 hover:underline">
-          {`/rooms/${roomLink}`}
-        </a>
-      </div>
-    )}
   </div>
 );
 

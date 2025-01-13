@@ -28,7 +28,7 @@ const roomApp = new Hono<AppContext>()
       const { name } = c.req.valid('json');
       const currentUser = c.get(CURRENT_USER_KEY);
 
-      const res = await CreateRoomUseCase(RoomRepository).execute(name || '', currentUser.id);
+      const res = await CreateRoomUseCase(RoomRepository).execute(name, currentUser.id);
       return c.json(res);
     }
   );
