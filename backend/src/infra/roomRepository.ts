@@ -79,6 +79,9 @@ export const RoomRepository: IRoomRepository = {
       include: {
         votes: true,
       },
+      orderBy: {
+        created_at: 'desc',
+      },
     });
     return rooms.map((room) => convertToRoomEntity(room));
   },
