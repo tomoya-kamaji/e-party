@@ -1,9 +1,12 @@
+import { RoomDetailQuery } from '@/infra/query/roomDetail';
 import { RoomRepository } from '@/infra/roomRepository';
 import { AppContext, CURRENT_USER_KEY } from '@/middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { CreateRoomUseCase, GetRoomListUseCase } from './useCase';
+import { CreateRoomUseCase, GetRoomListUseCase, RoomRevealUseCase } from './useCase';
+import { RoomDetailUseCase } from './useCase/detail';
+import { RoomResetUseCase } from './useCase/reset';
 
 /**
  * ルームAPI
@@ -15,6 +18,32 @@ const roomApp = new Hono<AppContext>()
     const res = await GetRoomListUseCase(RoomRepository).execute(currentUser.id);
     return c.json(res);
   })
+  // ルーム詳細取得API
+  .get('/:id', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    const res = await RoomDetailUseCase(RoomDetailQuery).execute(id);
+    return c.json(res);
+  })
+  // ルーム全公開
+  .patch('/:id/reveal', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    await RoomRevealUseCase(RoomRepository).execute(id);
+    return c.json({ message: 'Votes revealed' });
+  })
+  // ルーム投票結果リセット
+  .patch('/:id/reset', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    await RoomResetUseCase(RoomRepository).execute(id);
+    return c.json({ message: 'Votes reset' });
+  })
+  // 投票
+  .post('/:id/vote', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    const currentUser = c.get(CURRENT_USER_KEY);
+    // await RoomVoteUseCase(RoomRepository).execute(id, currentUser.id);
+    return c.json({ message: 'Voted' });
+  })
+
   // ルーム作成API
   .post(
     '',

@@ -23,6 +23,22 @@ const onCreate = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) =
     });
 };
 
+const onReveal = async (id: string) => {
+  return honoClient.api.rooms[':id'].reveal.$patch({
+    param: {
+      id: id,
+    },
+  });
+};
+
+const onReset = async (id: string) => {
+  return honoClient.api.rooms[':id'].reset.$patch({
+    param: {
+      id: id,
+    },
+  });
+};
+
 /**
  * ルームのアクション
  */
@@ -30,7 +46,7 @@ export const useRoomAction = () => {
   const { mutate } = useSWRConfig();
 
   /**
-   * 担当サービスの更新
+   * 作成
    */
   const create = useCallback(
     async (requestParameters: HonoBodyType<typeof honoClient.api.rooms.$post>) => {
@@ -39,7 +55,29 @@ export const useRoomAction = () => {
     [mutate]
   );
 
+  /**
+   * 投票結果公開
+   */
+  const revealVotes = useCallback(
+    async (id: string) => {
+      return onReveal(id);
+    },
+    [mutate]
+  );
+
+  /**
+   * 投票結果リセット
+   */
+  const resetVotes = useCallback(
+    async (id: string) => {
+      return onReset(id);
+    },
+    [mutate]
+  );
+
   return {
     create,
+    revealVotes,
+    resetVotes,
   };
 };

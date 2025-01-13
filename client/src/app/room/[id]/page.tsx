@@ -1,38 +1,28 @@
 'use client';
 
 import { LoadingIndicator } from '@/component/LoadingIndicator';
-import { useParams, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useSnackbar } from '@/component/SnackBar';
+import { useRoomAction } from '@/repository/api/room';
+import { useFetchDetailRoom } from '@/repository/api/room/useFetchDetail';
+import { useParams } from 'next/navigation';
 
 interface User {
-  iconUrl: string;
+  imageUrl: string;
   vote: number | null; // 投票値(数値) or null
   hasVoted: boolean; // 投票済みかどうか
 }
 
-interface Room {
+interface Participant {
   id: string;
-  name: string;
+  userId: string;
+  userName: string;
+  userImageUrl: string;
+  value: number | undefined;
+  isRevealed: boolean;
 }
 
-// ユーザのサンプルデータ
-const dummyUsers: User[] = [
-  { iconUrl: '/images/avatar1.png', vote: 3, hasVoted: true },
-  { iconUrl: '/images/avatar2.png', vote: 3, hasVoted: true },
-  { iconUrl: '/images/avatar3.png', vote: 8, hasVoted: true },
-];
-
-// ルーム情報を取得する関数(ダミー)
-const fetchRoomDetail = async (roomId: string): Promise<Room> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: roomId,
-        name: `サンプルルーム(${roomId})`,
-      });
-    }, 500);
-  });
-};
+// 投票済みかどうか
+const hasVoted = (p: Participant) => p.value !== undefined;
 
 // フィボナッチ数列（数値のみ）
 const FIBONACCI_VALUES = [1, 2, 3, 5, 8, 13, 21];
@@ -48,59 +38,73 @@ const getCardStatusClasses = (cardLabel: string) => {
   }
 };
 
-const RoomDetailPage: React.FC = () => {
-  const router = useRouter();
+const RoomDetailPage = () => {
   const { id } = useParams();
+  const { showSnackbar } = useSnackbar();
+  const { resetVotes, revealVotes } = useRoomAction();
 
-  const [room, setRoom] = useState<Room | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isRevealed, setIsRevealed] = useState(false);
-
-  useEffect(() => {
-    if (typeof id === 'string') {
-      fetchRoomDetail(id).then((res) => {
-        setRoom(res);
-        setLoading(false);
-      });
-    }
-  }, [id]);
-
-  if (loading || !room) {
+  if (typeof id !== 'string') {
+    throw new Error('ルームIDが取得できませんでした');
+  }
+  const { data, isLoading } = useFetchDetailRoom(id);
+  if (isLoading || !data?.room) {
     return <LoadingIndicator />;
   }
 
   // 全員投票済みかどうか
-  const allVoted = dummyUsers.every((user) => user.hasVoted);
+  const allVoted = data.room.votes.every((vote) => vote.value !== undefined);
 
-  // 公開ボタン押下
-  const handleReveal = () => {
-    setIsRevealed(true);
+  const createInviteUrl = (baseUrl: string, roomId: string): string => {
+    return `${baseUrl}/room/${roomId}`;
   };
+
+  const handleCopyInviteUrl = () => {
+    const inviteUrl = createInviteUrl(window.location.origin, data.room.id);
+    navigator.clipboard.writeText(inviteUrl);
+    showSnackbar('招待リンクをコピーしました', 'success');
+  };
+
+  const handleReset = () => {
+    resetVotes(data.room.id);
+  };
+
+  const handleReveal = () => {
+    revealVotes(data.room.id);
+  };
+
+  // 参加者に変換
+  const participants: Participant[] = data.room.votes.map((vote) => ({
+    id: vote.userId,
+    userId: vote.userId,
+    userName: vote.userName,
+    userImageUrl: vote.userImageUrl,
+    value: vote.value,
+    isRevealed: vote.isRevealed,
+  }));
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="mx-auto max-w-xl rounded-lg bg-white p-6 shadow-md">
         <div className="columns-2">
           <ul className="space-y-2">
-            {dummyUsers.map((user, index) => {
+            {participants.map((participant, index) => {
               // カード表示のロジック
               // 未投票 → '未'
               // 投票済み & 未公開 → '済'
               // 投票済み & 公開 → voteの数字
               let cardLabel = '未';
-              if (user.hasVoted) {
-                cardLabel = isRevealed && user.vote !== null ? String(user.vote) : '済';
+              if (hasVoted(participant)) {
+                cardLabel = participant.isRevealed ? String(participant.value) : '済';
               }
 
               const statusClasses = getCardStatusClasses(cardLabel);
               return (
                 <li key={index} className="rounded-lg border p-3 text-gray-700">
-                  {/* 2カラムレイアウト */}
                   <div className="grid grid-cols-2 items-center gap-2">
-                    {/* 左カラム: アイコン */}
-                    <img src={user.iconUrl} alt="user-icon" className="h-6 w-6 rounded-full object-cover" />
-                    {/* 右カラム: カードステータス (色分け) */}
-                    <span className={`justify-self-end rounded px-4 py-4 text-sm ${statusClasses}`}>{cardLabel}</span>
+                    {/* アイコン */}
+                    <img src={participant.userImageUrl} alt="user-icon" className="rounded-full p-5" />
+                    {/* カードステータス (色分け) */}
+                    <span className={`justify-self-end rounded p-4 text-sm ${statusClasses}`}>{cardLabel}</span>
                   </div>
                 </li>
               );
@@ -112,7 +116,7 @@ const RoomDetailPage: React.FC = () => {
         <div className="pt-4">
           <div className="flex flex-wrap gap-2">
             {FIBONACCI_VALUES.map((value) => (
-              <button key={value} className="rounded bg-blue-500 px-5 py-5 text-white hover:bg-blue-600">
+              <button key={value} className="rounded bg-blue-500 p-5 text-white hover:bg-blue-600">
                 {value}
               </button>
             ))}
@@ -120,7 +124,7 @@ const RoomDetailPage: React.FC = () => {
         </div>
 
         {/* 公開ボタン */}
-        {allVoted && !isRevealed && (
+        {allVoted && (
           <div className="mt-4">
             <button onClick={handleReveal} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
               公開する
@@ -128,8 +132,25 @@ const RoomDetailPage: React.FC = () => {
           </div>
         )}
 
+        {/* リセットボタン */}
+        <div className="mt-4">
+          <button onClick={handleReset} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
+            リセット
+          </button>
+        </div>
+
+        {/* 招待URLコピー ボタン */}
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={handleCopyInviteUrl}
+            className="rounded bg-gray-300 px-4 py-2 text-gray-800 hover:bg-gray-400"
+          >
+            招待リンクをコピー
+          </button>
+        </div>
+
         {/* ルーム名（下の方に表示） */}
-        <div className="mt-8 text-right text-sm text-gray-500">{room.name}</div>
+        <div className="mt-8 text-right text-sm text-gray-500">{data.room.name}</div>
       </div>
     </div>
   );

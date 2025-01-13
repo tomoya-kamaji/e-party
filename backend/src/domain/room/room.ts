@@ -1,6 +1,6 @@
 import { RoomStatus } from '@prisma/client';
 import { v4 } from 'uuid';
-import { createVoteEntity, VoteEntity } from './votes';
+import { createVoteEntity, resetVote, revealVote, VoteEntity } from './votes';
 
 export interface RoomEntity {
   id: string;
@@ -70,5 +70,25 @@ export const closeRoom = (room: RoomEntity): RoomEntity => {
   return {
     ...room,
     status: RoomStatus.CLOSED,
+  };
+};
+
+/**
+ * 投票を全公開
+ */
+export const revealVotes = (room: RoomEntity): RoomEntity => {
+  return {
+    ...room,
+    votes: room.votes.map(revealVote),
+  };
+};
+
+/**
+ * 投票をリセット
+ */
+export const resetVotes = (room: RoomEntity): RoomEntity => {
+  return {
+    ...room,
+    votes: room.votes.map(resetVote),
   };
 };
