@@ -35,14 +35,14 @@ export const RoomRepository: IRoomRepository = {
           tx.vote.upsert({
             where: { id: vote.id },
             update: {
-              value: vote.value,
+              value: vote.value ?? null,
               is_revealed: vote.isRevealed,
             },
             create: {
               id: vote.id,
               room_id: vote.roomId,
               user_id: vote.userId,
-              value: vote.value,
+              value: vote.value ?? null,
               is_revealed: vote.isRevealed,
             },
           })
@@ -94,7 +94,7 @@ const convertToRoomEntity = (room: RoomWithDetails): RoomEntity => {
         id: vote.id,
         roomId: vote.room_id,
         userId: vote.user_id,
-        value: vote.value ?? '',
+        value: vote.value ?? undefined,
         isRevealed: vote.is_revealed,
       })
     ),

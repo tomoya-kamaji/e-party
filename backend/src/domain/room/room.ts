@@ -15,12 +15,13 @@ export interface RoomEntity {
  * 生成
  */
 export const createRoomEntity = (params: { name: string; ownerId: string; participantIds: string[] }): RoomEntity => {
+  const roomId = v4();
   return {
-    id: v4(),
+    id: roomId,
     name: params.name,
     status: RoomStatus.OPEN,
     ownerId: params.ownerId,
-    votes: [],
+    votes: [createVoteEntity({ roomId: roomId, userId: params.ownerId })],
   };
 };
 
@@ -52,7 +53,7 @@ export const addParticipant =
   (participantId: string): RoomEntity => {
     return {
       ...room,
-      votes: [...room.votes, createVoteEntity({ roomId: room.id, userId: participantId, value: '' })],
+      votes: [...room.votes, createVoteEntity({ roomId: room.id, userId: participantId })],
     };
   };
 

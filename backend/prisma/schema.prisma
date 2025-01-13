@@ -42,7 +42,7 @@ model Vote {
     id          String   @id @default(uuid()) // 投票のID
     room_id     String // 対象のルームID
     user_id     String // 投票したユーザーのID
-    value       String? // 投票内容 (カードの値: 例 1, 2, 3, "?" など)
+    value       Int? // 投票内容 (カードの値: 例 1, 2, 3, "?" など)
     is_revealed Boolean  @default(false) // 投票が公開されたかどうか
     created_at  DateTime @default(now()) // 投票作成日時
 

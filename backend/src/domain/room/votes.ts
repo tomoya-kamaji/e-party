@@ -4,19 +4,18 @@ export interface VoteEntity {
   id: string;
   roomId: string;
   userId: string;
-  value: string;
+  value?: number;
   isRevealed: boolean;
 }
 
 /**
  * 生成
  */
-export const createVoteEntity = (params: { roomId: string; userId: string; value: string }): VoteEntity => {
+export const createVoteEntity = (params: { roomId: string; userId: string }): VoteEntity => {
   return {
     id: v4(),
     roomId: params.roomId,
     userId: params.userId,
-    value: params.value,
     isRevealed: false,
   };
 };
@@ -28,7 +27,7 @@ export const reconstructVoteEntity = (params: {
   id: string;
   roomId: string;
   userId: string;
-  value: string;
+  value?: number;
   isRevealed: boolean;
 }): VoteEntity => {
   return {
@@ -37,6 +36,16 @@ export const reconstructVoteEntity = (params: {
     userId: params.userId,
     value: params.value,
     isRevealed: params.isRevealed,
+  };
+};
+
+/**
+ * 投票する
+ */
+export const vote = (vote: VoteEntity, value: number): VoteEntity => {
+  return {
+    ...vote,
+    value: vote.value,
   };
 };
 
@@ -56,7 +65,7 @@ export const revealVote = (vote: VoteEntity): VoteEntity => {
 export const resetVote = (vote: VoteEntity): VoteEntity => {
   return {
     ...vote,
-    value: '',
+    value: 0,
     isRevealed: false,
   };
 };
