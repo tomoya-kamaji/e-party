@@ -57,6 +57,11 @@ export const reconstructRoomEntity = (params: {
 export const addParticipant =
   (room: RoomEntity) =>
   (participantId: string): RoomEntity => {
+    // 参加者が既にいる場合はエラーを返す
+    if (room.votes.some((vote) => vote.userId === participantId)) {
+      throw new Error('Participant already exists');
+    }
+
     return {
       ...room,
       votes: [...room.votes, createVoteEntity({ roomId: room.id, userId: participantId })],

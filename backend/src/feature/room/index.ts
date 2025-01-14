@@ -4,11 +4,16 @@ import { AppContext, CURRENT_USER_KEY } from '@/middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { CreateRoomUseCase, GetRoomListUseCase, RoomRevealUseCase } from './useCase';
-import { RoomDetailUseCase } from './useCase/detail';
-import { RoomResetAllUseCase } from './useCase/resetAll';
-import { RoomResetCurrentVoteUseCase } from './useCase/resetCurrent';
-import { RoomVoteUseCase } from './useCase/vote';
+import {
+  CreateRoomUseCase,
+  GetRoomListUseCase,
+  RoomDetailUseCase,
+  RoomJoinUseCase,
+  RoomResetAllUseCase,
+  RoomResetCurrentVoteUseCase,
+  RoomRevealUseCase,
+  RoomVoteUseCase,
+} from './useCase';
 
 /**
  * ルームAPI
@@ -38,7 +43,7 @@ const roomApp = new Hono<AppContext>()
     await RoomResetAllUseCase(RoomRepository).execute(id);
     return c.json({ message: 'OK' });
   })
-  
+
   // 自分の投票をリセット
   .patch('/:id/reset/current', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
@@ -60,7 +65,13 @@ const roomApp = new Hono<AppContext>()
       return c.json({ message: 'OK' });
     }
   )
-
+  // ルームに参加
+  .patch('/:id/join', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    const currentUser = c.get(CURRENT_USER_KEY);
+    await RoomJoinUseCase(RoomRepository).execute(id, currentUser.id);
+    return c.json({ message: 'OK' });
+  })
   // ルーム作成API
   .post(
     '',

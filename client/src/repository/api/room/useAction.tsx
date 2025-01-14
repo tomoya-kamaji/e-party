@@ -89,6 +89,18 @@ const onVote = async (id: string, value: number) => {
     });
 };
 
+const onJoin = async (id: string) => {
+  return honoClient.api.rooms[':id'].join
+    .$patch({
+      param: {
+        id: id,
+      },
+    })
+    .then((res) => {
+      return res.json();
+    });
+};
+
 /**
  * ルームのアクション
  */
@@ -145,11 +157,22 @@ export const useRoomAction = () => {
     [mutate]
   );
 
+  /**
+   * 参加
+   */
+  const joinRoom = useCallback(
+    async (id: string) => {
+      return onJoin(id);
+    },
+    [mutate]
+  );
+
   return {
     create,
     vote,
     revealVote,
     resetVote,
     resetAllVote,
+    joinRoom,
   };
 };

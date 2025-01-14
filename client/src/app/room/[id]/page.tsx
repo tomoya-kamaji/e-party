@@ -14,7 +14,6 @@ interface Participant {
   userName: string;
   userImageUrl: string;
   value: number | undefined;
-  isRevealed: boolean;
 }
 
 // 投票済みかどうか
@@ -35,19 +34,18 @@ const getCardStatusClasses = (cardLabel: string) => {
 };
 
 const RoomDetailPage = () => {
-  // 1. Hooks はコンポーネントのトップレベルで宣言
   const { id } = useParams();
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
-  const { vote, resetAllVote, revealVote, resetVote } = useRoomAction();
+  const { vote, resetAllVote, resetVote, joinRoom } = useRoomAction();
 
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [voted, setVoted] = useState<number | undefined>();
-  const [allVoted, setAllVoted] = useState<boolean>(false);
+  const [isRevealed, setIsRevealed] = useState<boolean>(false);
 
   // ルーム情報取得
-  const { data, isLoading, mutate } = useFetchDetailRoom(id as string);
   // mutateを0.5秒に1度呼び出す
+  const { data, isLoading, mutate } = useFetchDetailRoom(id as string);
   useEffect(() => {
     const interval = setInterval(() => {
       mutate();
@@ -55,37 +53,44 @@ const RoomDetailPage = () => {
     return () => clearInterval(interval);
   }, [mutate]);
 
-  // 2. まず全ての Hooks を書いたあとに「ガード節」で return
+  // ルームIDが取得できない場合はエラーを返す
   if (!id || typeof id !== 'string') {
     throw new Error('ルームIDが取得できませんでした');
   }
 
-  // 3. useEffectは Hooks の順序を崩さないため、ガード節より上 (または同じ階層) に定義してもOK
-  //   ただし条件分岐の外で必ず呼ばれるようにします
+  // ユーザーの投票情報を更新
   useEffect(() => {
+    if (!data?.room) return;
+
     const updatedParticipants: Participant[] =
-      data?.room.votes.map((vote) => ({
+      data.room.votes.map((vote) => ({
         id: vote.userId,
         userId: vote.userId,
         userName: vote.userName,
         userImageUrl: vote.userImageUrl,
         value: vote.value,
-        isRevealed: vote.isRevealed,
       })) || [];
+
     setParticipants(updatedParticipants);
 
-    // 全員投票済みかどうか
-    setAllVoted(updatedParticipants.every((p) => p.value !== undefined));
-  }, [data, user?.id]);
+    // 全員投票済みなら公開する
+    if (updatedParticipants.every((p) => p.value !== undefined)) {
+      setIsRevealed(true);
+    } else {
+      setIsRevealed(false);
+    }
 
-  // 招待URL作成
-  const createInviteUrl = (baseUrl: string, roomId: string): string => {
-    return `${baseUrl}/room/${roomId}`;
-  };
-
-  // 招待URLコピー
+    if (user && !updatedParticipants.some((p) => p.userId === user.id)) {
+      joinRoom(data.room.id).then(() => {
+        showSnackbar('ルームに参加しました', 'success');
+      });
+    }
+  }, [data, user, joinRoom, mutate, showSnackbar]);
+  /**
+   * 招待URLコピー
+   */
   const handleCopyInviteUrl = () => {
-    const inviteUrl = createInviteUrl(window.location.origin, data?.room.id || '');
+    const inviteUrl = `${window.location.origin}/room/${data?.room.id}`;
     navigator.clipboard.writeText(inviteUrl);
     showSnackbar('招待リンクをコピーしました', 'success');
   };
@@ -114,14 +119,6 @@ const RoomDetailPage = () => {
     setVoted(undefined);
   };
 
-  /**
-   * 公開
-   */
-  const handleReveal = () => {
-    revealVote(data?.room.id || '');
-  };
-
-  // 4. 以降は通常のUI
   return isLoading ? (
     <LoadingIndicator />
   ) : (
@@ -135,7 +132,7 @@ const RoomDetailPage = () => {
               // 投票済み & 公開 → voteの数字
               let cardLabel = '未';
               if (hasVoted(participant)) {
-                cardLabel = participant.isRevealed ? String(participant.value) : '済';
+                cardLabel = isRevealed ? String(participant.value) : '済';
               }
 
               const statusClasses = getCardStatusClasses(cardLabel);
@@ -173,26 +170,17 @@ const RoomDetailPage = () => {
           </div>
         </div>
 
-        {/* 公開ボタン (全員投票済み時) */}
-        {allVoted && (
-          <div className="mt-4">
-            <button onClick={handleReveal} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
-              公開する
-            </button>
-          </div>
-        )}
-
         {/* 自分のリセットボタン */}
         <div className="mt-4">
           <button onClick={handleReset} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
-            投票リセット
+            Reset
           </button>
         </div>
 
         {/* 全員リセットボタン */}
         <div className="mt-4">
           <button onClick={handleAllReset} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
-            投票全員リセット
+            All Reset
           </button>
         </div>
 
