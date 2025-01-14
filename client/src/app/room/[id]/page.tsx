@@ -4,13 +4,9 @@ import { LoadingIndicator } from '@/component/LoadingIndicator';
 import { useSnackbar } from '@/component/SnackBar';
 import { useRoomAction } from '@/repository/api/room';
 import { useFetchDetailRoom } from '@/repository/api/room/useFetchDetail';
+import { useAuth } from '@/state/AuthContext';
 import { useParams } from 'next/navigation';
-
-interface User {
-  imageUrl: string;
-  vote: number | null; // 投票値(数値) or null
-  hasVoted: boolean; // 投票済みかどうか
-}
+import { useEffect, useState } from 'react';
 
 interface Participant {
   id: string;
@@ -39,63 +35,101 @@ const getCardStatusClasses = (cardLabel: string) => {
 };
 
 const RoomDetailPage = () => {
+  // 1. Hooks はコンポーネントのトップレベルで宣言
   const { id } = useParams();
+  const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
-  const { resetVotes, revealVotes } = useRoomAction();
+  const { vote, resetAllVote, revealVote, resetVote } = useRoomAction();
 
-  if (typeof id !== 'string') {
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [voted, setVoted] = useState<number | undefined>();
+  const [allVoted, setAllVoted] = useState<boolean>(false);
+
+  // ルーム情報取得
+  const { data, isLoading, mutate } = useFetchDetailRoom(id as string);
+  // mutateを0.5秒に1度呼び出す
+  useEffect(() => {
+    const interval = setInterval(() => {
+      mutate();
+    }, 500);
+    return () => clearInterval(interval);
+  }, [mutate]);
+
+  // 2. まず全ての Hooks を書いたあとに「ガード節」で return
+  if (!id || typeof id !== 'string') {
     throw new Error('ルームIDが取得できませんでした');
   }
-  const { data, isLoading } = useFetchDetailRoom(id);
-  if (isLoading || !data?.room) {
-    return <LoadingIndicator />;
-  }
 
-  // 全員投票済みかどうか
-  const allVoted = data.room.votes.every((vote) => vote.value !== undefined);
+  // 3. useEffectは Hooks の順序を崩さないため、ガード節より上 (または同じ階層) に定義してもOK
+  //   ただし条件分岐の外で必ず呼ばれるようにします
+  useEffect(() => {
+    const updatedParticipants: Participant[] =
+      data?.room.votes.map((vote) => ({
+        id: vote.userId,
+        userId: vote.userId,
+        userName: vote.userName,
+        userImageUrl: vote.userImageUrl,
+        value: vote.value,
+        isRevealed: vote.isRevealed,
+      })) || [];
+    setParticipants(updatedParticipants);
 
+    // 全員投票済みかどうか
+    setAllVoted(updatedParticipants.every((p) => p.value !== undefined));
+  }, [data, user?.id]);
+
+  // 招待URL作成
   const createInviteUrl = (baseUrl: string, roomId: string): string => {
     return `${baseUrl}/room/${roomId}`;
   };
 
+  // 招待URLコピー
   const handleCopyInviteUrl = () => {
-    const inviteUrl = createInviteUrl(window.location.origin, data.room.id);
+    const inviteUrl = createInviteUrl(window.location.origin, data?.room.id || '');
     navigator.clipboard.writeText(inviteUrl);
     showSnackbar('招待リンクをコピーしました', 'success');
   };
 
-  // 投票
+  /**
+   * 投票
+   */
   const handleVote = (value: number) => {
-    vote(data.room.id, value);
+    setVoted(value);
+    vote(data?.room.id || '', value);
   };
 
+  /**
+   * 全員リセット
+   */
+  const handleAllReset = () => {
+    resetAllVote(data?.room.id || '');
+    setVoted(undefined);
+  };
 
-
+  /**
+   * 自分の投票リセット
+   */
   const handleReset = () => {
-    resetVotes(data.room.id);
+    resetVote(data?.room.id || '');
+    setVoted(undefined);
   };
 
+  /**
+   * 公開
+   */
   const handleReveal = () => {
-    revealVotes(data.room.id);
+    revealVote(data?.room.id || '');
   };
 
-  // 参加者に変換
-  const participants: Participant[] = data.room.votes.map((vote) => ({
-    id: vote.userId,
-    userId: vote.userId,
-    userName: vote.userName,
-    userImageUrl: vote.userImageUrl,
-    value: vote.value,
-    isRevealed: vote.isRevealed,
-  }));
-
-  return (
+  // 4. 以降は通常のUI
+  return isLoading ? (
+    <LoadingIndicator />
+  ) : (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="mx-auto max-w-xl rounded-lg bg-white p-6 shadow-md">
         <div className="columns-2">
           <ul className="space-y-2">
             {participants.map((participant, index) => {
-              // カード表示のロジック
               // 未投票 → '未'
               // 投票済み & 未公開 → '済'
               // 投票済み & 公開 → voteの数字
@@ -122,15 +156,24 @@ const RoomDetailPage = () => {
         {/* 投票エリア */}
         <div className="pt-4">
           <div className="flex flex-wrap gap-2">
-            {FIBONACCI_VALUES.map((value) => (
-              <button key={value} className="rounded bg-blue-500 p-3 text-white hover:bg-blue-600">
-                {value}
-              </button>
-            ))}
+            {FIBONACCI_VALUES.map((value) => {
+              // 自分が選択している数字の場合は濃い青、そうでなければ薄い青
+              const isSelected = voted === value;
+              const buttonClasses = isSelected ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 hover:bg-blue-400';
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleVote(value)}
+                  className={`rounded p-3 text-white ${buttonClasses}`}
+                >
+                  {value}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* 公開ボタン */}
+        {/* 公開ボタン (全員投票済み時) */}
         {allVoted && (
           <div className="mt-4">
             <button onClick={handleReveal} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
@@ -139,10 +182,17 @@ const RoomDetailPage = () => {
           </div>
         )}
 
-        {/* リセットボタン */}
+        {/* 自分のリセットボタン */}
         <div className="mt-4">
           <button onClick={handleReset} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
-            リセット
+            投票リセット
+          </button>
+        </div>
+
+        {/* 全員リセットボタン */}
+        <div className="mt-4">
+          <button onClick={handleAllReset} className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
+            投票全員リセット
           </button>
         </div>
 
@@ -157,7 +207,7 @@ const RoomDetailPage = () => {
         </div>
 
         {/* ルーム名（下の方に表示） */}
-        <div className="mt-8 text-right text-sm text-gray-500">{data.room.name}</div>
+        <div className="mt-8 text-right text-sm text-gray-500">{data?.room.name}</div>
       </div>
     </div>
   );

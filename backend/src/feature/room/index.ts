@@ -6,7 +6,8 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { CreateRoomUseCase, GetRoomListUseCase, RoomRevealUseCase } from './useCase';
 import { RoomDetailUseCase } from './useCase/detail';
-import { RoomResetUseCase } from './useCase/reset';
+import { RoomResetAllUseCase } from './useCase/resetAll';
+import { RoomResetCurrentVoteUseCase } from './useCase/resetCurrent';
 import { RoomVoteUseCase } from './useCase/vote';
 
 /**
@@ -25,20 +26,28 @@ const roomApp = new Hono<AppContext>()
     const res = await RoomDetailUseCase(RoomDetailQuery).execute(id);
     return c.json(res);
   })
-  // ルーム全公開
+  // 投票全公開
   .patch('/:id/reveal', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     await RoomRevealUseCase(RoomRepository).execute(id);
     return c.json({ message: 'OK' });
   })
-  // ルーム投票結果リセット
+  // 投票結果リセット
   .patch('/:id/reset', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
-    await RoomResetUseCase(RoomRepository).execute(id);
+    await RoomResetAllUseCase(RoomRepository).execute(id);
+    return c.json({ message: 'OK' });
+  })
+  
+  // 自分の投票をリセット
+  .patch('/:id/reset/current', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    const currentUser = c.get(CURRENT_USER_KEY);
+    await RoomResetCurrentVoteUseCase(RoomRepository).execute(id, currentUser.id);
     return c.json({ message: 'OK' });
   })
   // 投票
-  .post(
+  .patch(
     '/:id/vote',
     zValidator('param', z.object({ id: z.string() })),
     zValidator('json', z.object({ value: z.number() })),

@@ -14,7 +14,6 @@ const onCreate = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) =
       if (!res.ok) {
         throw new Error('エラーが発生しました');
       }
-      // ルーム取得のデータを更新する
       mutate(fetchRoomKey);
       return res.json();
     })
@@ -24,19 +23,70 @@ const onCreate = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) =
 };
 
 const onReveal = async (id: string) => {
-  return honoClient.api.rooms[':id'].reveal.$patch({
-    param: {
-      id: id,
-    },
-  });
+  return honoClient.api.rooms[':id'].reveal
+    .$patch({
+      param: {
+        id: id,
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('エラーが発生しました');
+      }
+      mutate(fetchRoomKey);
+      return res.json();
+    });
+};
+
+const onResetAll = async (id: string) => {
+  return honoClient.api.rooms[':id'].reset
+    .$patch({
+      param: {
+        id: id,
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('エラーが発生しました');
+      }
+      mutate(fetchRoomKey);
+      return res.json();
+    });
 };
 
 const onReset = async (id: string) => {
-  return honoClient.api.rooms[':id'].reset.$patch({
-    param: {
-      id: id,
-    },
-  });
+  return honoClient.api.rooms[':id'].reset.current
+    .$patch({
+      param: {
+        id: id,
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('エラーが発生しました');
+      }
+      mutate(fetchRoomKey);
+      return res.json();
+    });
+};
+
+const onVote = async (id: string, value: number) => {
+  return honoClient.api.rooms[':id'].vote
+    .$patch({
+      param: {
+        id: id,
+      },
+      json: {
+        value: value,
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('エラーが発生しました');
+      }
+      mutate(fetchRoomKey);
+      return res.json();
+    });
 };
 
 /**
@@ -55,12 +105,10 @@ export const useRoomAction = () => {
     [mutate]
   );
 
-  
-
   /**
    * 投票結果公開
    */
-  const revealVotes = useCallback(
+  const revealVote = useCallback(
     async (id: string) => {
       return onReveal(id);
     },
@@ -70,16 +118,38 @@ export const useRoomAction = () => {
   /**
    * 投票結果リセット
    */
-  const resetVotes = useCallback(
+  const resetAllVote = useCallback(
+    async (id: string) => {
+      return onResetAll(id);
+    },
+    [mutate]
+  );
+
+  /**
+   * 投票リセット
+   */
+  const resetVote = useCallback(
     async (id: string) => {
       return onReset(id);
     },
     [mutate]
   );
 
+  /**
+   * 投票
+   */
+  const vote = useCallback(
+    async (id: string, value: number) => {
+      return onVote(id, value);
+    },
+    [mutate]
+  );
+
   return {
     create,
-    revealVotes,
-    resetVotes,
+    vote,
+    revealVote,
+    resetVote,
+    resetAllVote,
   };
 };

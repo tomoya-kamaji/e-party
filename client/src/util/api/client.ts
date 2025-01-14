@@ -16,10 +16,15 @@ export const honoClient = hc<HonoAppType>('http://localhost:3000', {
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }
-
-    return fetch(input, {
-      ...init,
-      headers,
-    });
+    try {
+      const res = await fetch(input, {
+        ...init,
+        headers,
+      });
+      return res;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
 });

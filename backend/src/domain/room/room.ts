@@ -76,7 +76,7 @@ export const closeRoom = (room: RoomEntity): RoomEntity => {
 /**
  * 投票を全公開
  */
-export const revealVotes = (room: RoomEntity): RoomEntity => {
+export const revealAllVotes = (room: RoomEntity): RoomEntity => {
   return {
     ...room,
     votes: room.votes.map(revealVote),
@@ -86,10 +86,27 @@ export const revealVotes = (room: RoomEntity): RoomEntity => {
 /**
  * 投票をリセット
  */
-export const resetVotes = (room: RoomEntity): RoomEntity => {
+export const resetAllVotes = (room: RoomEntity): RoomEntity => {
   return {
     ...room,
     votes: room.votes.map(resetVote),
+  };
+};
+
+/**
+ * 投票をリセット
+ */
+export const resetCurrentVote = (room: RoomEntity, userId: string): RoomEntity => {
+  // 自分の投票を取得
+  const v = room.votes.find((vote) => vote.userId === userId);
+  if (!v) {
+    // TODO: エラーを返す
+    throw new Error('Vote not found');
+  }
+
+  return {
+    ...room,
+    votes: [...room.votes.filter((vote) => vote.userId !== userId), resetVote(v)],
   };
 };
 

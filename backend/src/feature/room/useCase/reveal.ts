@@ -1,6 +1,5 @@
 import { IRoomRepository } from '@/domain/room/repository';
-import { revealVotes } from '@/domain/room/room';
-
+import { revealAllVotes } from '@/domain/room/room';
 
 /**
  * 投票を全公開するユースケース
@@ -13,7 +12,7 @@ export const RoomRevealUseCase = (roomRepository: IRoomRepository) => ({
     }
 
     // 投票を全公開
-    const revealedRoom = revealVotes(room);
+    const revealedRoom = revealAllVotes(room);
     await roomRepository.save(revealedRoom);
   },
 });

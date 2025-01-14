@@ -12,7 +12,7 @@ export const RoomVoteUseCase = (roomRepository: IRoomRepository) => ({
     }
 
     // 投票する
-    const votedRoom = roomVote(room, userId, Number(value));
+    const votedRoom = roomVote(room, userId, value);
     await roomRepository.save(votedRoom);
   },
 });

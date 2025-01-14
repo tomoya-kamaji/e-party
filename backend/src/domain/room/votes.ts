@@ -45,7 +45,7 @@ export const reconstructVoteEntity = (params: {
 export const voteValue = (vote: VoteEntity, value: number): VoteEntity => {
   return {
     ...vote,
-    value: vote.value,
+    value,
   };
 };
 
@@ -65,7 +65,7 @@ export const revealVote = (vote: VoteEntity): VoteEntity => {
 export const resetVote = (vote: VoteEntity): VoteEntity => {
   return {
     ...vote,
-    value: 0,
+    value: undefined,
     isRevealed: false,
   };
 };
