@@ -64,6 +64,13 @@ const RoomDetailPage = () => {
     showSnackbar('招待リンクをコピーしました', 'success');
   };
 
+  // 投票
+  const handleVote = (value: number) => {
+    vote(data.room.id, value);
+  };
+
+
+
   const handleReset = () => {
     resetVotes(data.room.id);
   };
@@ -102,7 +109,7 @@ const RoomDetailPage = () => {
                 <li key={index} className="rounded-lg border p-3 text-gray-700">
                   <div className="grid grid-cols-2 items-center gap-2">
                     {/* アイコン */}
-                    <img src={participant.userImageUrl} alt="user-icon" className="rounded-full p-5" />
+                    <img src={participant.userImageUrl} alt="user-icon" className="rounded-full p-2" />
                     {/* カードステータス (色分け) */}
                     <span className={`justify-self-end rounded p-4 text-sm ${statusClasses}`}>{cardLabel}</span>
                   </div>
@@ -116,7 +123,7 @@ const RoomDetailPage = () => {
         <div className="pt-4">
           <div className="flex flex-wrap gap-2">
             {FIBONACCI_VALUES.map((value) => (
-              <button key={value} className="rounded bg-blue-500 p-5 text-white hover:bg-blue-600">
+              <button key={value} className="rounded bg-blue-500 p-3 text-white hover:bg-blue-600">
                 {value}
               </button>
             ))}

@@ -42,7 +42,7 @@ export const reconstructVoteEntity = (params: {
 /**
  * 投票する
  */
-export const vote = (vote: VoteEntity, value: number): VoteEntity => {
+export const voteValue = (vote: VoteEntity, value: number): VoteEntity => {
   return {
     ...vote,
     value: vote.value,

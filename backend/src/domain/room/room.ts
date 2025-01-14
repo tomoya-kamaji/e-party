@@ -1,6 +1,6 @@
 import { RoomStatus } from '@prisma/client';
 import { v4 } from 'uuid';
-import { createVoteEntity, resetVote, revealVote, VoteEntity } from './votes';
+import { createVoteEntity, resetVote, revealVote, VoteEntity, voteValue } from './votes';
 
 export interface RoomEntity {
   id: string;
@@ -90,5 +90,22 @@ export const resetVotes = (room: RoomEntity): RoomEntity => {
   return {
     ...room,
     votes: room.votes.map(resetVote),
+  };
+};
+
+/**
+ * 投票する
+ */
+export const roomVote = (room: RoomEntity, userId: string, value: number): RoomEntity => {
+  // 自身の投票を取得
+  const v = room.votes.find((vote) => vote.userId === userId);
+  if (!v) {
+    // TODO: エラーを返す
+    throw new Error('Vote not found');
+  }
+  const votedVote = voteValue(v, value);
+  return {
+    ...room,
+    votes: [...room.votes.filter((vote) => vote.userId !== userId), votedVote],
   };
 };
