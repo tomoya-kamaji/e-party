@@ -12,7 +12,8 @@ const variantStyles: Record<Variant, string> = {
   primary: 'bg-[#4398A9] text-white font-bold',
   secondary: 'border border-[#4398A9] text-[#4398A9] font-bold', // LINEを使用しないで始める
   danger: 'bg-red-500 hover:bg-red-600 text-white',
-  default: 'bg-blue-300 hover:bg-blue-400 text-white',
+  // デフォルト
+  default: 'bg-gray-300 hover:bg-gray-400 text-gray-800',
 };
 
 const sizeStyles: Record<Size, string> = {
