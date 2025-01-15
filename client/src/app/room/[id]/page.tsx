@@ -80,12 +80,14 @@ const RoomDetailPage = () => {
       setIsRevealed(false);
     }
 
+    // 参加していない場合は参加する
     if (user && !updatedParticipants.some((p) => p.userId === user.id)) {
       joinRoom(data.room.id).then(() => {
         showSnackbar('ルームに参加しました', 'success');
       });
     }
   }, [data, user, joinRoom, mutate, showSnackbar]);
+
   /**
    * 招待URLコピー
    */
