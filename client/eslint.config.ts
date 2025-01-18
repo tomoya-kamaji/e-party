@@ -15,7 +15,7 @@ export default defineConfig({
       typescript: {},
     },
   },
-  ignores: ['node_modules', 'dist'],
+  // ignores: ['node_modules', 'dist', '../backend'],
   ignorePatterns: [
     '.next',
     '.storybook',
@@ -28,6 +28,7 @@ export default defineConfig({
     'next.config.js',
     'next-env.d.ts',
     'schema',
+    '../backend',
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['react', 'react-refresh', 'import', '@typescript-eslint', 'unused-imports', 'tailwindcss'],

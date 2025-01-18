@@ -4,6 +4,7 @@ import { AppContext, CURRENT_USER_KEY } from '@/middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
+import { CreateRoomResponse, GetRoomListResponse, RoomDetailResponse } from './response';
 import {
   CreateRoomUseCase,
   GetRoomListUseCase,
@@ -23,13 +24,13 @@ const roomApp = new Hono<AppContext>()
   .get('', async (c) => {
     const currentUser = c.get(CURRENT_USER_KEY);
     const res = await GetRoomListUseCase(RoomRepository).execute(currentUser.id);
-    return c.json(res);
+    return c.json<GetRoomListResponse>(res);
   })
   // ルーム詳細取得API
   .get('/:id', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     const res = await RoomDetailUseCase(RoomDetailQuery).execute(id);
-    return c.json(res);
+    return c.json<RoomDetailResponse>(res);
   })
   // 投票全公開
   .patch('/:id/reveal', zValidator('param', z.object({ id: z.string() })), async (c) => {
@@ -86,7 +87,7 @@ const roomApp = new Hono<AppContext>()
       const currentUser = c.get(CURRENT_USER_KEY);
 
       const res = await CreateRoomUseCase(RoomRepository).execute(name, currentUser.id);
-      return c.json(res);
+      return c.json<CreateRoomResponse>(res);
     }
   );
 

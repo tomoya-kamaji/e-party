@@ -47,7 +47,7 @@ const RoomDetailPage = () => {
         userId: vote.userId,
         userName: vote.userName,
         userImageUrl: vote.userImageUrl,
-        value: vote.value,
+        value: vote.value ?? undefined,
       })) || [];
 
     setParticipants(updatedParticipants);

@@ -77,7 +77,11 @@ export const RoomRepository: IRoomRepository = {
     const rooms = await prisma.room.findMany({
       where: { votes: { some: { user_id: userId } } },
       include: {
-        votes: true,
+        votes: {
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
       },
       orderBy: {
         created_at: 'desc',

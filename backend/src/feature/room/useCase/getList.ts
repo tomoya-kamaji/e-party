@@ -1,21 +1,11 @@
 import { IRoomRepository } from '@/domain/room/repository';
-import { RoomStatus } from '@prisma/client';
-
-interface GetRoomResponse {
-  rooms: {
-    id: string;
-    name: string;
-    status: RoomStatus;
-    ownerId: string;
-    createdAt: string;
-  }[];
-}
+import { GetRoomListResponse } from '../response';
 
 /**
  * 該当ユーザーのルーム一覧を取得する
  */
 export const GetRoomListUseCase = (roomRepository: IRoomRepository) => ({
-  execute: async (userId: string): Promise<GetRoomResponse> => {
+  execute: async (userId: string): Promise<GetRoomListResponse> => {
     const rooms = await roomRepository.findByUserId(userId);
     if (!rooms) {
       throw new Error('Room not found');

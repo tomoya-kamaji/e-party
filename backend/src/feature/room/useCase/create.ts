@@ -1,16 +1,6 @@
 import { IRoomRepository } from '@/domain/room/repository';
 import { createRoomEntity } from '@/domain/room/room';
-import { RoomStatus } from '@prisma/client';
-
-interface CreateRoomResponse {
-  room: {
-    id: string;
-    name: string;
-    status: RoomStatus;
-    ownerId: string;
-    createdAt: Date;
-  };
-}
+import { CreateRoomResponse } from '../response';
 
 /**
  * 部屋を作成する
@@ -30,7 +20,7 @@ export const CreateRoomUseCase = (roomRepository: IRoomRepository) => ({
         name: room.name,
         status: room.status,
         ownerId: room.ownerId,
-        createdAt: room.createdAt,
+        createdAt: room.createdAt.toISOString(),
       },
     };
   },

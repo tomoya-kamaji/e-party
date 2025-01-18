@@ -1,29 +1,11 @@
 import { IRoomDetailQuery } from '@/domain/query/roomDetail';
-import { RoomStatus } from '@prisma/client';
-
-interface RoomDetailUseCaseResponse {
-  room: {
-    id: string;
-    name: string;
-    status: RoomStatus;
-    ownerId: string;
-    createdAt: string;
-    votes: {
-      id: string;
-      userId: string;
-      userName: string;
-      userImageUrl: string;
-      value: number | undefined;
-      isRevealed: boolean;
-    }[];
-  };
-}
+import { RoomDetailResponse } from '../response';
 
 /**
  * ルーム詳細を取得するユースケース
  */
 export const RoomDetailUseCase = (roomDetailQuery: IRoomDetailQuery) => ({
-  execute: async (id: string): Promise<RoomDetailUseCaseResponse> => {
+  execute: async (id: string): Promise<RoomDetailResponse> => {
     const room = await roomDetailQuery.execute(id);
     if (!room.room) {
       throw new Error('Room not found');
@@ -35,7 +17,14 @@ export const RoomDetailUseCase = (roomDetailQuery: IRoomDetailQuery) => ({
         status: room.room.status,
         ownerId: room.room.ownerId,
         createdAt: room.room.createdAt.toISOString(),
-        votes: room.room.votes,
+        votes: room.room.votes.map((vote) => ({
+          id: vote.id,
+          userId: vote.userId,
+          userName: vote.userName,
+          userImageUrl: vote.userImageUrl,
+          value: vote.value ?? null,
+          isRevealed: vote.isRevealed,
+        })),
       },
     };
   },
