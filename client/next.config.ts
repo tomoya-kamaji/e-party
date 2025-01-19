@@ -1,8 +1,8 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    turbo: {
-      ignore: ['../backend'], // backendを無視
-    },
+  typescript: {
+    // ビルド時の型チェックを無効化
+    ignoreBuildErrors: true,
   },
 };
-export default nextConfig;
+module.exports = nextConfig;

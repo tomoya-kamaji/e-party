@@ -11,7 +11,7 @@ import { useState } from 'react';
 /**
  * ホーム画面
  */
-export const Home = () => {
+export default function Home() {
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
 
@@ -53,6 +53,4 @@ export const Home = () => {
       )}
     </div>
   );
-};
-
-export default Home;
+}

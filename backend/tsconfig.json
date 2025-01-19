@@ -18,8 +18,10 @@
     "noPropertyAccessFromIndexSignature": true, // 安全なプロパティアクセス
     "useDefineForClassFields": true, // クラスフィールドの初期化で`define`を使用
     "strictNullChecks": true,
-    "outDir": "dist",
-    "rootDir": "src"
+    "outDir": "./dist", // 出力ディレクトリを明示的に指定
+    "rootDir": "./src", // ソースディレクトリを明示的に指定
+    "declaration": true,
+    "composite": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

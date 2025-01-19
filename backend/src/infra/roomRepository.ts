@@ -12,7 +12,7 @@ type RoomWithDetails = Prisma.RoomGetPayload<{
 export const RoomRepository: IRoomRepository = {
   async save(room: RoomEntity): Promise<RoomEntity> {
     // トランザクションを利用して Room、Topic、Votes を保存
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Room の upsert
       await tx.room.upsert({
         where: { id: room.id },
