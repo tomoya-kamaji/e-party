@@ -105,9 +105,6 @@ importers:
 
   client:
     dependencies:
-      '@e-party/backend':
-        specifier: workspace:*
-        version: link:../backend
       '@supabase/auth-helpers-nextjs':
         specifier: ^0.10.0
         version: 0.10.0(@supabase/supabase-js@2.47.10)
