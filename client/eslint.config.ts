@@ -15,7 +15,6 @@ export default defineConfig({
       typescript: {},
     },
   },
-  // ignores: ['node_modules', 'dist', '../backend'],
   ignorePatterns: [
     '.next',
     '.storybook',

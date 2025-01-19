@@ -15,7 +15,6 @@ export default defineConfig({
   },
   ignorePatterns: [
     'node_modules',
-    'dist',
     '.eslintrc.json',
     'yarn.lock',
     'pnpm-lock.yaml',

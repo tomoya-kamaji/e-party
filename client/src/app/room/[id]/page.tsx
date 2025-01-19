@@ -42,7 +42,7 @@ const RoomDetailPage = () => {
     if (!data?.room) return;
 
     const updatedParticipants: Participant[] =
-      data.room.votes.map((vote) => ({
+      data.room.votes.map((vote: any) => ({
         id: vote.userId,
         userId: vote.userId,
         userName: vote.userName,

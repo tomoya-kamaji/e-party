@@ -1,10 +1,13 @@
 {
-  "name": "backend",
+  "name": "@e-party/backend",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "clean": "rm -rf dist",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build": "tsc && pnpm build:types",
     "start": "node dist/index.js",
     "dev": "nodemon",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
@@ -14,7 +17,6 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {

@@ -26,7 +26,7 @@ const roomApp = new Hono<AppContext>()
     const res = await GetRoomListUseCase(RoomRepository).execute(currentUser.id);
     return c.json<GetRoomListResponse>(res);
   })
-  // ルーム詳細取得API
+  // ルーム詳細取得
   .get('/:id', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     const res = await RoomDetailUseCase(RoomDetailQuery).execute(id);
