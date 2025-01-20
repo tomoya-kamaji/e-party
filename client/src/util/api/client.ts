@@ -3,11 +3,12 @@
 import { hc } from 'hono/client';
 import { HonoAppType } from '../../../../backend/src';
 import { getAuthToken } from '../supabase/client';
+import { getEndpointsConfig } from '../env';
 
 /**
  * Honoのクライアント
  */
-export const honoClient = hc<HonoAppType>('http://localhost:3000', {
+export const honoClient = hc<HonoAppType>(getEndpointsConfig().backendUrl, {
   fetch: async (input: RequestInfo | URL, init: RequestInit | undefined) => {
     const token = await getAuthToken();
 

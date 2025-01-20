@@ -20,7 +20,6 @@ const Login = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-sm rounded-lg bg-white p-8 shadow-md">
         <div className="mb-6 text-center">
-          <img src="/logo.svg" alt="App Logo" className="mx-auto h-12 w-auto" />
           <h1 className="mt-4 text-2xl font-bold text-gray-700">E-Party</h1>
         </div>
         <Auth
@@ -29,6 +28,8 @@ const Login = () => {
             theme: ThemeSupa,
           }}
           providers={['google']}
+          showLinks={false}
+          onlyThirdPartyProviders={true}
         />
       </div>
     </div>

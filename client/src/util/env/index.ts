@@ -1,4 +1,3 @@
-
 /**
  * Supabase configuration
  */
@@ -23,6 +22,8 @@ const getEndpointsConfig = () => {
   if (!backendUrl) {
     throw new Error('Backend URL is not set in environment variables');
   }
+
+  return { backendUrl };
 };
 
-export { getSupabaseConfig };
+export { getSupabaseConfig, getEndpointsConfig };

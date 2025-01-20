@@ -16,15 +16,16 @@ export interface AppContext {
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   const authHeader = c.req.header('Authorization');
   if (!authHeader) {
-    throw UnauthorizedException('Authorization header is missing');
+    return c.json({ message: 'Unauthorized' }, 401);
+    // throw UnauthorizedException('Authorization header is missing');
   }
 
   const token = authHeader.split(' ')[1]; // Bearerトークンを抽出
 
-  // トークンを検証してユーザー情報を取得
   const { data, error } = await supabase.auth.getUser(token);
   if (error || !data.user) {
-    throw UnauthorizedException(`authMiddleware -> Error: ${error?.message}`);
+    return c.json({ message: 'Unauthorized' }, 401);
+    // throw UnauthorizedException(`authMiddleware -> Error: ${error?.message}`);
   }
 
   // ユーザー情報をcontextに保存
