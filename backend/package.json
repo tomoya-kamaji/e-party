@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build": "tsc && pnpm build:types",
+    "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon",
     "lint": "eslint 'src/**/*.{ts,tsx}'",

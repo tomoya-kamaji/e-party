@@ -20,8 +20,7 @@
     "strictNullChecks": true,
     "outDir": "./dist", // 出力ディレクトリを明示的に指定
     "rootDir": "./src", // ソースディレクトリを明示的に指定
-    "declaration": true,
-    "composite": true
+    "declaration": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

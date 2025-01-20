@@ -1,7 +1,6 @@
 import { serve } from '@hono/node-server';
 import 'dotenv/config';
 import { Hono } from 'hono';
-import { hc } from 'hono/client';
 import roomApp from './feature/room';
 import userApp from './feature/user';
 import { authMiddleware, loggingMiddleware, originMiddleware } from './middleware';
