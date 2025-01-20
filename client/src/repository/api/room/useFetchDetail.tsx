@@ -20,8 +20,10 @@ const fetchRoomDetail = async (roomId: string) => {
 /**
  * ルーム詳細を取得
  */
-export const useFetchDetailRoom = (roomId: string) => {
-  const { data, error, isLoading, mutate } = useSWR(fetchRoomDetailKey, () => fetchRoomDetail(roomId));
+export const useFetchDetailRoom = (roomId: string, suspense: boolean = true) => {
+  const { data, error, isLoading, mutate } = useSWR(fetchRoomDetailKey, () => fetchRoomDetail(roomId), {
+    suspense: suspense,
+  });
 
   return {
     data,
