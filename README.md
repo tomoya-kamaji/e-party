@@ -51,4 +51,3 @@
 | データベース        | Supabase (PostgreSQL)       |
 | 認証               | Supabase Auth               |
 | インフラ           | Vercel (フロントエンド), Render (バックエンド) |
-| モニタリング        | Sentry, Render Logs         |
