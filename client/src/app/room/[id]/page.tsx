@@ -31,13 +31,34 @@ const RoomDetailPage = () => {
 
   // 定期的にルーム情報を更新
   useEffect(() => {
-    const interval = setInterval(() => {
-      mutate();
-    }, 500);
-    return () => clearInterval(interval);
+    let isActive = true;
+
+    const fetchData = async () => {
+      if (!isActive) return;
+
+      try {
+        await mutate(); // APIリクエストの完了を待つ
+        // コンポーネントがまだマウントされていれば次のリクエストをスケジュール
+        if (isActive) {
+          fetchData();
+        }
+      } catch (error) {
+        console.error('Failed to fetch room data:', error);
+        if (isActive) {
+          // エラー時は1秒待ってから再試行
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          fetchData();
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isActive = false;
+    };
   }, [mutate]);
 
-  // ルームデータが変化したときの処理
   useEffect(() => {
     if (!data?.room) return;
 
