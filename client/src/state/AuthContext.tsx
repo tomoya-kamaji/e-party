@@ -34,8 +34,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // セッションの変化を監視
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session || undefined);
+      if (event === 'SIGNED_IN') {
+        router.push(PATH_PAGE.home); // または適切なダッシュボードページへ
+      }
+
     });
 
     // 初期セッションの取得
