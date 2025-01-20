@@ -12,7 +12,9 @@ const VotingArea = ({ voted, handleVote }: Props) => {
     <div className="pt-4">
       <div className="flex flex-wrap gap-2">
         {FIBONACCI_VALUES.map((value) => {
-          const buttonClasses = isSelected(value) ? 'bg-[#4398A9] text-white font-bold' : 'bg-gray-300 hover:bg-gray-400 text-gray-800';
+          const buttonClasses = isSelected(value)
+            ? 'bg-[#4398A9] text-white font-bold'
+            : 'bg-gray-300 hover:bg-gray-400 text-gray-800';
           return (
             <button key={value} onClick={() => handleVote(value)} className={`rounded p-4 ${buttonClasses}`}>
               {value}
