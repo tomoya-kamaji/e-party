@@ -19,6 +19,7 @@ COPY backend ./backend
 
 # ビルドを実行
 WORKDIR /app/backend
+RUN pnpm prisma generate
 RUN pnpm build
 
 # プロダクション用の依存関係だけを残す
