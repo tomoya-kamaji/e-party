@@ -8,11 +8,11 @@ interface Props {
 // カードの色分け
 const getCardStatusClasses = (cardLabel: string) => {
   if (cardLabel === '未') {
-    return 'bg-gray-300 text-white';
+    return 'bg-gray-300 text-gray-800';
   } else if (cardLabel === '済') {
-    return 'bg-green-400 text-white';
+    return 'bg-[#4398A9] text-white font-bold';
   } else {
-    return 'bg-blue-500 text-white';
+    return 'bg-[#4398A9] text-white font-bold';
   }
 };
 

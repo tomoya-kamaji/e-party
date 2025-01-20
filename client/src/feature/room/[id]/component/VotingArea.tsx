@@ -8,14 +8,13 @@ interface Props {
 const VotingArea = ({ voted, handleVote }: Props) => {
   const isSelected = (value: number) => voted === value;
 
-
   return (
     <div className="pt-4">
       <div className="flex flex-wrap gap-2">
         {FIBONACCI_VALUES.map((value) => {
-          const buttonClasses = isSelected(value) ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-300 hover:bg-blue-400';
+          const buttonClasses = isSelected(value) ? 'bg-[#4398A9] text-white font-bold' : 'bg-gray-300 hover:bg-gray-400 text-gray-800';
           return (
-            <button key={value} onClick={() => handleVote(value)} className={`rounded p-3 text-white ${buttonClasses}`}>
+            <button key={value} onClick={() => handleVote(value)} className={`rounded p-4 ${buttonClasses}`}>
               {value}
             </button>
           );
