@@ -33,7 +33,7 @@ const RoomDetailPage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       mutate();
-    }, 2000);
+    }, 500);
     return () => clearInterval(interval);
   }, [mutate]);
 
