@@ -10,7 +10,6 @@ WORKDIR /app
 # 必要なファイルをコピー
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY backend/package.json backend/
-
 # 開発依存関係を含めてインストール
 RUN pnpm install --frozen-lockfile
 
