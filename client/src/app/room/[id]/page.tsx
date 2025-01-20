@@ -33,16 +33,14 @@ const RoomDetailPage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       mutate();
-    }, 500);
+    }, 1000);
     return () => clearInterval(interval);
   }, [mutate]);
 
   // ルームデータが変化したときの処理
   useEffect(() => {
-    if (!data?.room) return;
-
     const updatedParticipants: Participant[] =
-      data.room.votes.map((vote: any) => ({
+      data?.room.votes.map((vote: any) => ({
         id: vote.userId,
         userId: vote.userId,
         userName: vote.userName,
