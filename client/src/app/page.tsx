@@ -12,7 +12,6 @@ import { useState } from 'react';
  * ホーム画面
  */
 export default function Home() {
-  const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
 
   // ルーム 名
