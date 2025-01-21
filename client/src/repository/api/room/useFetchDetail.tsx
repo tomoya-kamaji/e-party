@@ -1,6 +1,8 @@
 'use client';
 
 import { honoClient } from '@/util/api';
+import { PATH_PAGE } from '@/util/route';
+import { redirect } from 'next/navigation';
 import useSWR from 'swr';
 
 export const fetchRoomDetailKey = ['rooms', 'get', 'detail'];
@@ -12,7 +14,7 @@ const fetchRoomDetail = async (roomId: string) => {
     },
   });
   if (!res.ok) {
-    throw new Error('エラーが発生しました');
+    redirect(PATH_PAGE.home);
   }
   return res.json();
 };

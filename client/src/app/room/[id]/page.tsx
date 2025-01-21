@@ -8,7 +8,8 @@ import { useRoomDetail } from '@/feature/room/[id]/hook/useRoomDetail';
 import { Participant } from '@/feature/room/[id]/model/participant';
 import { useFetchDetailRoom } from '@/repository/api/room/useFetchDetail';
 import { useAuth } from '@/state/AuthContext';
-import { useParams } from 'next/navigation';
+import { PATH_PAGE } from '@/util/route';
+import { redirect, useParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 
 const RoomDetailPage = () => {

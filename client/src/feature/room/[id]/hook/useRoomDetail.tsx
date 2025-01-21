@@ -1,8 +1,11 @@
+'use client';
+
 import { useSnackbar } from '@/component/SnackBar';
 import { useRoomAction } from '@/repository/api/room';
-import { useParams } from 'next/navigation';
+import { useParams, redirect } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { Participant } from '../model/participant';
+import { PATH_PAGE } from '@/util/route';
 
 export const useRoomDetail = () => {
   const { id } = useParams();
@@ -14,7 +17,8 @@ export const useRoomDetail = () => {
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
 
   if (!id || typeof id !== 'string') {
-    throw new Error('ルームIDが取得できませんでした');
+    // ルームIDが取得できない場合はhomeにリダイレクト
+C
   }
 
   // 投票
