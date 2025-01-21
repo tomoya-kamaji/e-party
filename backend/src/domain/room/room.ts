@@ -2,6 +2,18 @@ import { RoomStatus } from '@prisma/client';
 import { v4 } from 'uuid';
 import { createVoteEntity, resetVote, revealVote, VoteEntity, voteValue } from './votes';
 
+/**
+ * 日付をYYYYMMDD形式にフォーマットする
+ */
+export const formatDateForDisplay = (date: Date, format: string = 'YYYY/MM/DD') => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  return date.toLocaleDateString('ja-JP', options);
+};
+
 export interface RoomEntity {
   id: string;
   name: string;
@@ -17,7 +29,8 @@ export interface RoomEntity {
  */
 export const createRoomEntity = (params: { name?: string; ownerId: string; participantIds: string[] }): RoomEntity => {
   // もしもnameがなかったら、タイムスタンプを名前にする
-  const name = params.name ? params.name : `Room-${new Date().getTime()}`;
+  // 日付を名前にする
+  const name = params.name ? params.name : `R-${formatDateForDisplay(new Date())}`;
   const roomId = v4();
   return {
     id: roomId,

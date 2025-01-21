@@ -5,7 +5,6 @@ import { useSnackbar } from '@/component/SnackBar';
 import CreateRoomForm from '@/feature/home/component/CreateRoom';
 import RoomList from '@/feature/home/component/RoomList';
 import { useFetchRoom, useRoomAction } from '@/repository/api/room';
-import { useAuth } from '@/state/AuthContext';
 import { useState } from 'react';
 
 /**
@@ -39,16 +38,18 @@ export default function Home() {
       {isLoading ? (
         <LoadingIndicator />
       ) : (
-        <>
-          {/* ルーム作成フォーム */}
-          <CreateRoomForm
-            roomName={roomName}
-            setRoomName={(roomName) => setRoomName(roomName)}
-            handleCreateRoom={handleCreateRoom}
-          />
-          {/* ルーム一覧 */}
-          <RoomList rooms={data?.rooms || []} />
-        </>
+        <div className="w-full max-w-md">
+          <>
+            {/* ルーム作成フォーム */}
+            <CreateRoomForm
+              roomName={roomName}
+              setRoomName={(roomName) => setRoomName(roomName)}
+              handleCreateRoom={handleCreateRoom}
+            />
+            {/* ルーム一覧 */}
+            <RoomList rooms={data?.rooms || []} />
+          </>
+        </div>
       )}
     </div>
   );

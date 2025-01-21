@@ -11,10 +11,11 @@ const RoomList = ({ rooms }: RoomListProps) => {
   const data = rooms.map((room) => ({
     ルーム名: (
       <a href={PATH_PAGE.roomDetail(room.id)} className="font-medium text-blue-500 hover:underline">
-        {room.name}
+        {/* 10文字以上は省略 */}
+        {room.name.length > 10 ? `${room.name.slice(0, 10)}...` : room.name}
       </a>
     ),
-    作成日時: formatDateForDisplay(room.createdAt),
+    作成日時: formatDateForDisplay(room.createdAt, 'YYYY/MM/DD'),
   }));
 
   return (
