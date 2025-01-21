@@ -8,8 +8,7 @@ import { useRoomDetail } from '@/feature/room/[id]/hook/useRoomDetail';
 import { Participant } from '@/feature/room/[id]/model/participant';
 import { useFetchDetailRoom } from '@/repository/api/room/useFetchDetail';
 import { useAuth } from '@/state/AuthContext';
-import { PATH_PAGE } from '@/util/route';
-import { redirect, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 
 const RoomDetailPage = () => {
@@ -71,6 +70,8 @@ const RoomDetailPage = () => {
         userImageUrl: vote.userImageUrl,
         value: vote.value ?? undefined,
       })) || [];
+    // updatedParticipantsをid順に並び替える
+    updatedParticipants.sort((a, b) => a.id.localeCompare(b.id));
 
     setParticipants(updatedParticipants);
 

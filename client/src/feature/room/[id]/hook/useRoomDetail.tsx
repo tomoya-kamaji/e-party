@@ -18,7 +18,7 @@ export const useRoomDetail = () => {
 
   if (!id || typeof id !== 'string') {
     // ルームIDが取得できない場合はhomeにリダイレクト
-C
+    redirect(PATH_PAGE.home);
   }
 
   // 投票
