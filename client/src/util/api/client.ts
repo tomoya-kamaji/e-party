@@ -31,10 +31,15 @@ export const honoClient = hc<HonoAppType>(getEndpointsConfig().backendUrl, {
   },
 });
 
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  return 'http://localhost:3000';
+};
+
 /**
  * Nextjsのhandlerのクライアント
  */
-export const apiClient = hc<NextAppType>("", {
+export const apiClient = hc<NextAppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init: RequestInit | undefined) => {
     const token = await getAuthToken();
 
