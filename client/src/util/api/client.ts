@@ -37,7 +37,7 @@ const getBaseUrl = () => {
 };
 
 /**
- * Nextjsのhandlerのクライアント
+ * APIのクライアント
  */
 export const apiClient = hc<NextAppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init: RequestInit | undefined) => {
