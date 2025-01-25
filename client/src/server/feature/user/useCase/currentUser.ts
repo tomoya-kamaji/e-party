@@ -1,3 +1,5 @@
+import { IUserRepository } from '@/server/domain/user';
+
 interface Response {
   user: {
     id: string;
@@ -10,14 +12,18 @@ interface Response {
 /**
  * 現在のログインしているユーザーを取得するユースケース
  */
-export const GetCurrentUserUseCase = () => ({
+export const GetCurrentUserUseCase = (userRepository: IUserRepository) => ({
   execute: async (userId: string): Promise<Response> => {
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
     return {
       user: {
-        id: '1',
-        name: 'test',
-        email: 'test@example.com',
-        imageUrl: 'https://example.com/image.jpg',
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        imageUrl: user.imageUrl,
       },
     };
   },

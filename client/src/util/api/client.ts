@@ -31,7 +31,10 @@ export const honoClient = hc<HonoAppType>(getEndpointsConfig().backendUrl, {
   },
 });
 
-export const nextClient = hc<NextAppType>('http://localhost:3005', {
+/**
+ * Nextjsのhandlerのクライアント
+ */
+export const apiClient = hc<NextAppType>("", {
   fetch: async (input: RequestInfo | URL, init: RequestInit | undefined) => {
     const token = await getAuthToken();
 
@@ -52,9 +55,3 @@ export const nextClient = hc<NextAppType>('http://localhost:3005', {
     }
   },
 });
-
-export const fetchCurrentUser = async () => {
-  const res = await nextClient.api.users.current.$get();
-  const json = await res.json();
-  return json;
-};
