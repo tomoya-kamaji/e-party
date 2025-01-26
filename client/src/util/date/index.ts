@@ -1,9 +1,7 @@
-type Format = 'YYYY/MM/DD' | 'YYYY/MM/DD HH:mm';
-
 /**
  * 日付をフォーマット
  */
-export const formatDateForDisplay = (isoDate: string, format: Format = 'YYYY/MM/DD') => {
+export const formatDateForDisplay = (isoDate: string) => {
   const date = new Date(isoDate);
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',

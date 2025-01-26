@@ -5,7 +5,7 @@ import { VoteEntity, createVoteEntity, revealVote, resetVote, voteValue } from '
 /**
  * 日付をYYYYMMDD形式にフォーマットする
  */
-export const formatDateForDisplay = (date: Date, format: string = 'YYYY/MM/DD') => {
+export const formatDateForDisplay = (date: Date) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',

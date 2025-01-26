@@ -28,7 +28,8 @@ export default function Home() {
       if (data.room) {
         showSnackbar('ルームを作成しました', 'success');
       }
-    } catch (error) {
+    } catch (e) {
+      console.error(e);
       showSnackbar('ルームの作成に失敗しました', 'error');
     }
   };
