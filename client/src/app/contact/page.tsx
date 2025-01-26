@@ -1,37 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
-type FormData = {
-  name: string;
-  email: string;
-  message: string;
-};
+import { useContactForm } from './_hooks/useContactForm';
 
 export default function ContactPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
-
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    try {
-      // ここにAPI送信のロジックを実装
-      console.log(data);
-      setSubmitStatus('success');
-      reset();
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const { register, handleSubmit, errors, isSubmitting, submitStatus, onSubmit } = useContactForm();
 
   return (
     <div className="mx-auto max-w-2xl p-6">
@@ -42,12 +14,7 @@ export default function ContactPage() {
           <label htmlFor="name" className="mb-2 block">
             お名前 <span className="text-red-500">*</span>
           </label>
-          <input
-            id="name"
-            type="text"
-            {...register('name', { required: '名前は必須です' })}
-            className="w-full rounded border p-2"
-          />
+          <input id="name" type="text" {...register('name')} className="w-full rounded border p-2" />
           {errors.name && <p className="mt-1 text-red-500">{errors.name.message}</p>}
         </div>
 
@@ -55,18 +22,7 @@ export default function ContactPage() {
           <label htmlFor="email" className="mb-2 block">
             メールアドレス <span className="text-red-500">*</span>
           </label>
-          <input
-            id="email"
-            type="email"
-            {...register('email', {
-              required: 'メールアドレスは必須です',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: '有効なメールアドレスを入力してください',
-              },
-            })}
-            className="w-full rounded border p-2"
-          />
+          <input id="email" type="email" {...register('email')} className="w-full rounded border p-2" />
           {errors.email && <p className="mt-1 text-red-500">{errors.email.message}</p>}
         </div>
 
@@ -74,11 +30,7 @@ export default function ContactPage() {
           <label htmlFor="message" className="mb-2 block">
             お問い合わせ内容 <span className="text-red-500">*</span>
           </label>
-          <textarea
-            id="message"
-            {...register('message', { required: 'お問い合わせ内容は必須です' })}
-            className="h-32 w-full rounded border p-2"
-          />
+          <textarea id="message" {...register('message')} className="h-32 w-full rounded border p-2" />
           {errors.message && <p className="mt-1 text-red-500">{errors.message.message}</p>}
         </div>
 
@@ -87,7 +39,7 @@ export default function ContactPage() {
           disabled={isSubmitting}
           className="rounded bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:bg-gray-400"
         >
-          {isSubmitting ? '送信中...' : '送信する'}
+          {isSubmitting ? '送信中...' : '確認画面へ'}
         </button>
       </form>
 
