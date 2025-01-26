@@ -1,12 +1,12 @@
 'use client';
 
-import { HonoBodyType, honoClient } from '@/util/api';
+import { HonoBodyType, apiClient } from '@/util/api';
 import { useCallback } from 'react';
 import { mutate, useSWRConfig } from 'swr';
 import { fetchRoomKey } from './useFetch';
 
-const onCreate = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) => {
-  return honoClient.api.rooms
+const onCreate = async (json: HonoBodyType<typeof apiClient.api.rooms.$post>) => {
+  return apiClient.api.rooms
     .$post({
       json,
     })
@@ -23,7 +23,7 @@ const onCreate = async (json: HonoBodyType<typeof honoClient.api.rooms.$post>) =
 };
 
 const onReveal = async (id: string) => {
-  return honoClient.api.rooms[':id'].reveal
+  return apiClient.api.rooms[':id'].reveal
     .$patch({
       param: {
         id: id,
@@ -39,7 +39,7 @@ const onReveal = async (id: string) => {
 };
 
 const onResetAll = async (id: string) => {
-  return honoClient.api.rooms[':id'].reset
+  return apiClient.api.rooms[':id'].reset
     .$patch({
       param: {
         id: id,
@@ -55,7 +55,7 @@ const onResetAll = async (id: string) => {
 };
 
 const onReset = async (id: string) => {
-  return honoClient.api.rooms[':id'].reset.current
+  return apiClient.api.rooms[':id'].reset.current
     .$patch({
       param: {
         id: id,
@@ -71,7 +71,7 @@ const onReset = async (id: string) => {
 };
 
 const onVote = async (id: string, value: number) => {
-  return honoClient.api.rooms[':id'].vote
+  return apiClient.api.rooms[':id'].vote
     .$patch({
       param: {
         id: id,
@@ -90,7 +90,7 @@ const onVote = async (id: string, value: number) => {
 };
 
 const onJoin = async (id: string) => {
-  return honoClient.api.rooms[':id'].join
+  return apiClient.api.rooms[':id'].join
     .$patch({
       param: {
         id: id,
@@ -111,7 +111,7 @@ export const useRoomAction = () => {
    * 作成
    */
   const create = useCallback(
-    async (requestParameters: HonoBodyType<typeof honoClient.api.rooms.$post>) => {
+    async (requestParameters: HonoBodyType<typeof apiClient.api.rooms.$post>) => {
       return onCreate(requestParameters);
     },
     [mutate]
