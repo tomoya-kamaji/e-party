@@ -1,5 +1,4 @@
-import { IRoomRepository } from '@/domain/room/repository';
-import { revealAllVotes } from '@/domain/room/room';
+import { IRoomRepository, revealAllVotes } from '@/server/domain/room';
 
 /**
  * 投票を全公開するユースケース

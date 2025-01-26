@@ -1,4 +1,4 @@
-import { IRoomDetailQuery } from '@/domain/query/roomDetail';
+import { IRoomDetailQuery } from '@/server/domain/query/roomDetail';
 import { RoomDetailResponse } from '../response';
 
 /**

@@ -1,5 +1,4 @@
-import { IRoomRepository } from '@/domain/room/repository';
-import { resetCurrentVote } from '@/domain/room/room';
+import { IRoomRepository, resetCurrentVote } from '@/server/domain/room';
 
 /**
  * 投票をリセットするユースケース

@@ -1,6 +1,3 @@
-import { RoomDetailQuery } from '@/infra/query/roomDetail';
-import { RoomRepository } from '@/infra/roomRepository';
-import { AppContext, CURRENT_USER_KEY } from '@/middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
@@ -15,6 +12,9 @@ import {
   RoomRevealUseCase,
   RoomVoteUseCase,
 } from './useCase';
+import { AppContext, CURRENT_USER_KEY } from '@/server/middleware';
+import { RoomDetailQuery } from '@/server/infra/query/roomDetail';
+import { RoomRepository } from '@/server/infra/roomRepository';
 
 /**
  * ルームAPI

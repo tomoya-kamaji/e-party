@@ -1,5 +1,4 @@
-import { IRoomRepository } from '@/domain/room/repository';
-import { roomVote } from '@/domain/room/room';
+import { IRoomRepository, roomVote } from '@/server/domain/room';
 
 /**
  * 投票するユースケース

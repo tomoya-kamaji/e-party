@@ -1,5 +1,4 @@
-import { IRoomRepository } from '@/domain/room/repository';
-import { addParticipant } from '@/domain/room/room';
+import { IRoomRepository, addParticipant } from '@/server/domain/room';
 
 /**
  * ルームに参加するユースケース

@@ -1,4 +1,4 @@
-import { IRoomRepository } from '@/domain/room/repository';
+import { IRoomRepository } from '@/server/domain/room';
 import { GetRoomListResponse } from '../response';
 
 /**

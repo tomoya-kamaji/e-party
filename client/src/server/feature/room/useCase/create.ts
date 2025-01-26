@@ -1,5 +1,4 @@
-import { IRoomRepository } from '@/domain/room/repository';
-import { createRoomEntity } from '@/domain/room/room';
+import { IRoomRepository, createRoomEntity } from '@/server/domain/room';
 import { CreateRoomResponse } from '../response';
 
 /**
