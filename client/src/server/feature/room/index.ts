@@ -33,27 +33,27 @@ const roomApp = new Hono<AppContext>()
     return c.json<RoomDetailResponse>(res);
   })
   // 投票全公開
-  .patch('/:id/reveal', zValidator('param', z.object({ id: z.string() })), async (c) => {
+  .put('/:id/reveal', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     await RoomRevealUseCase(RoomRepository).execute(id);
     return c.json({ message: 'OK' });
   })
   // 投票結果リセット
-  .patch('/:id/reset', zValidator('param', z.object({ id: z.string() })), async (c) => {
+  .put('/:id/reset', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     await RoomResetAllUseCase(RoomRepository).execute(id);
     return c.json({ message: 'OK' });
   })
 
   // 自分の投票をリセット
-  .patch('/:id/reset/current', zValidator('param', z.object({ id: z.string() })), async (c) => {
+  .put('/:id/reset/current', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     const currentUser = c.get(CURRENT_USER_KEY);
     await RoomResetCurrentVoteUseCase(RoomRepository).execute(id, currentUser.id);
     return c.json({ message: 'OK' });
   })
   // 投票
-  .patch(
+  .put(
     '/:id/vote',
     zValidator('param', z.object({ id: z.string() })),
     zValidator('json', z.object({ value: z.number() })),
@@ -67,7 +67,7 @@ const roomApp = new Hono<AppContext>()
     }
   )
   // ルームに参加
-  .patch('/:id/join', zValidator('param', z.object({ id: z.string() })), async (c) => {
+  .put('/:id/join', zValidator('param', z.object({ id: z.string() })), async (c) => {
     const id = c.req.param('id');
     const currentUser = c.get(CURRENT_USER_KEY);
     await RoomJoinUseCase(RoomRepository).execute(id, currentUser.id);

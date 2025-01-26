@@ -24,7 +24,7 @@ const onCreate = async (json: HonoBodyType<typeof apiClient.api.rooms.$post>) =>
 
 const onReveal = async (id: string) => {
   return apiClient.api.rooms[':id'].reveal
-    .$patch({
+    .$put({
       param: {
         id: id,
       },
@@ -40,7 +40,7 @@ const onReveal = async (id: string) => {
 
 const onResetAll = async (id: string) => {
   return apiClient.api.rooms[':id'].reset
-    .$patch({
+    .$put({
       param: {
         id: id,
       },
@@ -56,7 +56,7 @@ const onResetAll = async (id: string) => {
 
 const onReset = async (id: string) => {
   return apiClient.api.rooms[':id'].reset.current
-    .$patch({
+    .$put({
       param: {
         id: id,
       },
@@ -72,7 +72,7 @@ const onReset = async (id: string) => {
 
 const onVote = async (id: string, value: number) => {
   return apiClient.api.rooms[':id'].vote
-    .$patch({
+    .$put({
       param: {
         id: id,
       },
@@ -91,7 +91,7 @@ const onVote = async (id: string, value: number) => {
 
 const onJoin = async (id: string) => {
   return apiClient.api.rooms[':id'].join
-    .$patch({
+    .$put({
       param: {
         id: id,
       },
