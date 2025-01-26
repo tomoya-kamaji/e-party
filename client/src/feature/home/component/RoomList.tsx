@@ -15,7 +15,7 @@ const RoomList = ({ rooms }: RoomListProps) => {
         {room.name.length > 10 ? `${room.name.slice(0, 10)}...` : room.name}
       </a>
     ),
-    作成日時: formatDateForDisplay(room.createdAt, 'YYYY/MM/DD'),
+    作成日時: formatDateForDisplay(room.createdAt),
   }));
 
   return (

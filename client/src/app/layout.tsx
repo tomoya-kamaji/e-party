@@ -1,5 +1,3 @@
-import Header from '@/component/Header';
-import { AuthProvider } from '@/state/AuthContext';
 import clsx from 'clsx';
 import { Noto_Sans_JP } from 'next/font/google';
 import React from 'react';
@@ -24,12 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja" className={clsx(notoSansJP.variable, 'font-sans')}>
       <body>
-        <SnackbarProvider>
-          <AuthProvider>
-            <Header />
-            {children}
-          </AuthProvider>
-        </SnackbarProvider>
+        <SnackbarProvider>{children}</SnackbarProvider>
       </body>
     </html>
   );

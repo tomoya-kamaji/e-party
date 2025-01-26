@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuth } from '@/state/AuthContext';
 import { supabase } from '@/util/supabase/client';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
@@ -8,13 +7,20 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const Login = () => {
-  const { session } = useAuth();
   const router = useRouter();
+
+  // セッションの確認を直接行う
   useEffect(() => {
-    if (session) {
-      router.push('/');
-    }
-  }, [session, router]);
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/');
+      }
+    };
+    checkSession();
+  }, [router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">

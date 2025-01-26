@@ -70,10 +70,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!context) {
+      // ログイン画面に遷移（useEffect内で実行）
+      router.push(PATH_PAGE.login);
+    }
+  }, [context, router]);
+
   if (!context) {
-    // ログイン画面に遷移
-    router.push(PATH_PAGE.login);
     throw new Error('useAuth must be used within a AuthProvider');
   }
+
   return context;
 };
