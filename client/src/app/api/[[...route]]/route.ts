@@ -1,12 +1,14 @@
 import roomApp from '@/server/feature/room';
 import userApp from '@/server/feature/user';
-import { authMiddleware } from '@/server/middleware';
+import { authMiddleware, loggingMiddleware, originMiddleware } from '@/server/middleware';
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 const app = new Hono()
   .basePath('/api')
   .use(authMiddleware)
+  .use('*', originMiddleware)
+  .use('*', loggingMiddleware)
   // user
   .route('/users', userApp)
   // room
