@@ -1,12 +1,12 @@
 'use client';
 
-import { honoClient } from '@/util/api';
+import { apiClient } from '@/util/api';
 import useSWR from 'swr';
 
 export const fetchRoomKey = ['rooms', 'get'];
 
 const fetchRoom = async () => {
-  const res = await honoClient.api.rooms.$get();
+  const res = await apiClient.api.rooms.$get();
   if (!res.ok) {
     throw new Error('エラーが発生しました');
   }
