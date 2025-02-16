@@ -6,6 +6,12 @@ on:
   issue_comment:
     types: [created]
 
+env:
+  EXTRA_SETTINGS: |
+    必ず日本語で回答してください。
+    文章が日本語で回答されているかを確認し、
+    英語になっている場合は日本語にしてください。
+
 permissions:
   contents: read
   pull-requests: write
@@ -27,9 +33,9 @@ jobs:
         uses: Codium-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PR_AGENT_MODEL_PROVIDER: "azure"
-          PR_AGENT_LANGUAGE: "Japanese"
-          AZURE_OPENAI_ENDPOINT: "https://sample-jpn.openai.azure.com"
-          AZURE_OPENAI_DEPLOYMENT_NAME: "gpt-4o"
-          AZURE_OPENAI_API_VERSION: "2023-03-15-preview"
+          OPENAI.API_TYPE: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_TYPE: "azure"
+          OPENAI.API_BASE: "https://sample-jpn.openai.azure.com"
+          OPENAI.DEPLOYMENT_ID: "gpt-4o"
+          OPENAI.API_VERSION: "2023-03-15-preview"
+          EXTRA_SETTINGS: ${{ env.EXTRA_SETTINGS }}
