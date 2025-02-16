@@ -15,7 +15,11 @@ jobs:
   pr_agent:
     runs-on: ubuntu-latest
     name: Run PR Agent
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: |
+      github.event.sender.type != 'Bot' && (
+        github.event_name == 'pull_request' ||
+        github.event_name == 'issue_comment'
+      )
 
     steps:
       - name: Checkout
@@ -27,7 +31,7 @@ jobs:
         uses: Codium-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}  # 変更点: AZURE_OPENAI_API_KEY から OPENAI_KEY に変更
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           PR_AGENT_MODEL_PROVIDER: "azure"
           PR_AGENT_AZURE_ENGINE: "gpt-4o"
           PR_AGENT_AZURE_API_BASE: "https://sample-jpn.openai.azure.com"
@@ -40,5 +44,6 @@ jobs:
             セキュリティ、パフォーマンス、保守性の観点から分析してください。
           PR_AGENT_TIMEOUT: "600"
           PR_AGENT_AUTO_DESCRIBE: "false"
-          PR_AGENT_AUTO_REVIEW: "false"
+          PR_AGENT_AUTO_REVIEW: "true" # 変更：falseからtrueに
           PR_AGENT_AUTO_IMPROVE: "true"
+          PR_AGENT_INCREMENTAL_MODE: "true" # 追加：増分モードを有効化
