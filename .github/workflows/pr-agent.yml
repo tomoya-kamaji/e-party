@@ -35,7 +35,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           OPENAI_API_TYPE: "azure"
-          OPENAI.API_BASE: "https://sample-jpn.openai.azure.com"
-          OPENAI.DEPLOYMENT_ID: "gpt-4o"
-          OPENAI.API_VERSION: "2023-03-15-preview"
+          OPENAI_API_BASE: "https://sample-jpn.openai.azure.com"
+          OPENAI_DEPLOYMENT_ID: "gpt-4o"
+          OPENAI_API_VERSION: "2023-03-15-preview"
+          PR_AGENT_MODEL_PROVIDER: "azure"
+          PR_AGENT_LANGUAGE: "Japanese"
           EXTRA_SETTINGS: ${{ env.EXTRA_SETTINGS }}
