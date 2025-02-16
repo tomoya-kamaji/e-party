@@ -27,7 +27,7 @@ jobs:
         uses: Codium-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AZURE_OPENAI_API_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}  # 変更点: AZURE_OPENAI_API_KEY から OPENAI_KEY に変更
           PR_AGENT_MODEL_PROVIDER: "azure"
           PR_AGENT_AZURE_ENGINE: "gpt-4o"
           PR_AGENT_AZURE_API_BASE: "https://sample-jpn.openai.azure.com"
