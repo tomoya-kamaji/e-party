@@ -22,6 +22,6 @@
     "rootDir": "./src", // ソースディレクトリを明示的に指定
     "declaration": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../client/src/util/chat.test.ts", "../client/src/util/chat.ts"],
   "exclude": ["node_modules", "dist"]
 }
