@@ -27,6 +27,6 @@ jobs:
         uses: Codium-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PR_AGENT_MODEL_PROVIDER: "anthropic"
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PR_AGENT_MODEL_PROVIDER: "openai"
           PR_AGENT_LANGUAGE: "Japanese"
