@@ -32,12 +32,30 @@ jobs:
       - name: PR Agent action
         uses: Codium-ai/pr-agent@main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          # OPENAI_API_TYPE: "azure"
+          # OPENAI_API_BASE: "https://sample-jpn.openai.azure.com"
+          # OPENAI_DEPLOYMENT_ID: "gpt-4o"
+          # OPENAI_API_VERSION: "2023-03-15-preview"
+          # PR_AGENT_MODEL_PROVIDER: "azure"
+          # PR_AGENT_LANGUAGE: "Japanese"
+          # EXTRA_SETTINGS: ${{ env.EXTRA_SETTINGS }}
+
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-          OPENAI_API_TYPE: "azure"
-          OPENAI_API_BASE: "https://sample-jpn.openai.azure.com"
-          OPENAI_DEPLOYMENT_ID: "gpt-4o"
-          OPENAI_API_VERSION: "2023-03-15-preview"
-          PR_AGENT_MODEL_PROVIDER: "azure"
-          PR_AGENT_LANGUAGE: "Japanese"
-          EXTRA_SETTINGS: ${{ env.EXTRA_SETTINGS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI.API_TYPE: "azure"
+          OPENAI.API_VERSION: "2023-03-15-preview"
+          OPENAI.API_BASE: "https://sample-jpn.openai.azure.com"
+          OPENAI.DEPLOYMENT_ID: "gpt-4o"
+          CONFIG.MODEL_TURBO: "gpt-4o"
+          CONFIG.AI_TIMEOUT: 600
+          github_action_config.auto_describe: false
+          github_action_config.auto_review: false
+          github_action_config.auto_improve: true
+          # pr_description.extra_instructions: ${{ env.COMMON_INSTRUCTIONS }}
+          # pr_reviewer.extra_instructions: ${{ env.COMMON_INSTRUCTIONS }}
+          # pr_code_suggestions.extra_instructions: ${{ env.COMMON_INSTRUCTIONS }}
+          # pr_code_suggestions.summarize: false
+          # pr_code_suggestions.max_context_tokens: 128000
+          # pr_code_suggestions.num_code_suggestions: 10
