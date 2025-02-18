@@ -101,6 +101,12 @@ const onJoin = async (id: string) => {
     });
 };
 
+const onLeave = async (id: string) => {
+  return apiClient.api.rooms[':id'].leave.$patch({
+    param: { id: id },
+  });
+};
+
 /**
  * ルームのアクション
  */
@@ -167,6 +173,15 @@ export const useRoomAction = () => {
     [mutate]
   );
 
+  /**
+   * 退会
+   */
+  const leaveRoom = useCallback(
+    async (id: string) => {
+      return onLeave(id);
+    },
+    [mutate]
+  );
   return {
     create,
     vote,
@@ -174,5 +189,6 @@ export const useRoomAction = () => {
     resetVote,
     resetAllVote,
     joinRoom,
+    leaveRoom,
   };
 };

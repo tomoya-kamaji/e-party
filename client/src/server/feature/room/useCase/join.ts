@@ -1,9 +1,9 @@
-import { IRoomRepository, removeParticipant } from '@/server/domain/room';
+import { IRoomRepository, addParticipant } from '@/server/domain/room';
 
 /**
- * ルームから退会するユースケース
+ * ルームに参加するユースケース
  */
-export const RoomLeaveUseCase = (roomRepository: IRoomRepository) => ({
+export const RoomJoinUseCase = (roomRepository: IRoomRepository) => ({
   execute: async (roomId: string, userId: string): Promise<void> => {
     const room = await roomRepository.findById(roomId);
     if (!room) {
@@ -11,7 +11,7 @@ export const RoomLeaveUseCase = (roomRepository: IRoomRepository) => ({
     }
 
     // 自分の投票をリセットする
-    const joinedRoom = removeParticipant(room)(userId);
+    const joinedRoom = addParticipant(room)(userId);
     await roomRepository.save(joinedRoom);
   },
 });

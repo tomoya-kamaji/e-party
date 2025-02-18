@@ -1,3 +1,4 @@
+import { useRoomAction } from '@/repository/api/room';
 import { hasVoted, Participant } from '../model/participant';
 
 interface Props {
@@ -17,6 +18,15 @@ const getCardStatusClasses = (cardLabel: string) => {
 };
 
 const ParticipantList = ({ participants, isRevealed }: Props) => {
+  const { leaveRoom } = useRoomAction();
+
+  // confirm を表示する
+  const handleLeave = (id: string) => {
+    if (confirm('退会させますか？')) {
+      leaveRoom(id);
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
       {participants.map((participant) => {
@@ -34,6 +44,8 @@ const ParticipantList = ({ participants, isRevealed }: Props) => {
               {/* 文字サイズでかく */}
               <p className={`text-large ${statusClasses} p-4`}>{cardLabel}</p>
             </div>
+            {/* ゴミ箱 */}
+            <button onClick={() => handleLeave(participant.id)}>💀</button>
           </div>
         );
       })}

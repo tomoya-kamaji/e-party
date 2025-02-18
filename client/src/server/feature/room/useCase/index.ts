@@ -6,3 +6,4 @@ export * from './resetAll';
 export * from './resetCurrent';
 export * from './reveal';
 export * from './vote';
+export * from './leave';

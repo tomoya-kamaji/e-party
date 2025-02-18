@@ -6,6 +6,7 @@ import {
   CreateRoomUseCase,
   GetRoomListUseCase,
   RoomDetailUseCase,
+  RoomJoinUseCase,
   RoomLeaveUseCase,
   RoomResetAllUseCase,
   RoomResetCurrentVoteUseCase,
@@ -15,7 +16,6 @@ import {
 import { AppContext, CURRENT_USER_KEY } from '@/server/middleware';
 import { RoomDetailQuery } from '@/server/infra/query/roomDetail';
 import { RoomRepository } from '@/server/infra/roomRepository';
-import { RoomJoinUseCase } from '../../../../../backend/src/feature/room/useCase';
 
 /**
  * ルームAPI
