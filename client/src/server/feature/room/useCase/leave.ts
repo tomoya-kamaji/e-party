@@ -1,4 +1,4 @@
-import { IRoomRepository, addParticipant } from '@/server/domain/room';
+import { IRoomRepository, addParticipant, removeParticipant } from '@/server/domain/room';
 
 /**
  * ルーム
@@ -11,7 +11,7 @@ export const RoomLeaveUseCase = (roomRepository: IRoomRepository) => ({
     }
 
     // 自分の投票をリセットする
-    const joinedRoom = addParticipant(room)(userId);
+    const joinedRoom = removeParticipant(room)(userId);
     await roomRepository.save(joinedRoom);
   },
 });
