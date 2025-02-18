@@ -1,4 +1,4 @@
-import { IRoomRepository, addParticipant, removeParticipant } from '@/server/domain/room';
+import { IRoomRepository, removeParticipant } from '@/server/domain/room';
 
 /**
  * ルーム

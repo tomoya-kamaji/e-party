@@ -92,6 +92,7 @@ export const removeParticipant =
       votes: room.votes.filter((vote) => vote.userId !== participantId),
     };
   };
+
 export const closeRoom = (room: RoomEntity): RoomEntity => {
   return {
     ...room,
