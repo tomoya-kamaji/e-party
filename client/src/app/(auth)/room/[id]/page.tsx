@@ -70,7 +70,7 @@ const RoomDetailPage = () => {
         userImageUrl: vote.userImageUrl,
         value: vote.value ?? undefined,
       })) || [];
-    // updatedParticipantsをid順に並び替える
+    // updatedParticipantsをid順
     updatedParticipants.sort((a, b) => a.id.localeCompare(b.id));
 
     setParticipants(updatedParticipants);
