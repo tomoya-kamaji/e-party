@@ -82,8 +82,16 @@ export const addParticipant =
   };
 
 /**
- * ルームを閉じる
+ * 参加者を削除
  */
+export const removeParticipant =
+  (room: RoomEntity) =>
+  (participantId: string): RoomEntity => {
+    return {
+      ...room,
+      votes: room.votes.filter((vote) => vote.userId !== participantId),
+    };
+  };
 export const closeRoom = (room: RoomEntity): RoomEntity => {
   return {
     ...room,

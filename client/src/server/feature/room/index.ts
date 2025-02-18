@@ -6,7 +6,7 @@ import {
   CreateRoomUseCase,
   GetRoomListUseCase,
   RoomDetailUseCase,
-  RoomJoinUseCase,
+  RoomLeaveUseCase,
   RoomResetAllUseCase,
   RoomResetCurrentVoteUseCase,
   RoomRevealUseCase,
@@ -15,6 +15,7 @@ import {
 import { AppContext, CURRENT_USER_KEY } from '@/server/middleware';
 import { RoomDetailQuery } from '@/server/infra/query/roomDetail';
 import { RoomRepository } from '@/server/infra/roomRepository';
+import { RoomJoinUseCase } from '../../../../../backend/src/feature/room/useCase';
 
 /**
  * ルームAPI
@@ -71,6 +72,13 @@ const roomApp = new Hono<AppContext>()
     const id = c.req.param('id');
     const currentUser = c.get(CURRENT_USER_KEY);
     await RoomJoinUseCase(RoomRepository).execute(id, currentUser.id);
+    return c.json({ message: 'OK' });
+  })
+  // ルームを退会
+  .patch('/:id/leave', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.param('id');
+    const currentUser = c.get(CURRENT_USER_KEY);
+    await RoomLeaveUseCase(RoomRepository).execute(id, currentUser.id);
     return c.json({ message: 'OK' });
   })
   // ルーム作成API
