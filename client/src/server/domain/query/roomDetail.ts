@@ -15,6 +15,7 @@ export interface RoomDetailQueryResponse {
           userImageUrl: string;
           value: number | undefined;
           isRevealed: boolean;
+          isPaused: boolean;
         }[];
       }
     | undefined;

@@ -10,7 +10,7 @@ import { PATH_PAGE } from '@/util/route';
 export const useRoomDetail = () => {
   const { id } = useParams();
   const { showSnackbar } = useSnackbar();
-  const { vote, resetAllVote, resetVote, joinRoom } = useRoomAction();
+  const { vote, resetAllVote, resetVote, joinRoom, switchPaused } = useRoomAction();
 
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [voted, setVoted] = useState<number | undefined>();
@@ -56,6 +56,15 @@ export const useRoomDetail = () => {
     });
   }, [joinRoom, id, showSnackbar]);
 
+
+  // 投票休止状態を切り替える
+  const handleSwitchPaused = useCallback(
+    (participantId: string, isPaused: boolean) => {
+      switchPaused(id, participantId, isPaused);
+    },
+    [switchPaused, id]
+  );
+
   return {
     participants,
     setParticipants,
@@ -63,6 +72,7 @@ export const useRoomDetail = () => {
     setVoted,
     isRevealed,
     setIsRevealed,
+    handleSwitchPaused,
     handleVote,
     handleAllReset,
     handleReset,

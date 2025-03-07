@@ -1,6 +1,6 @@
 import { RoomStatus } from '@prisma/client';
 import { v4 } from 'uuid';
-import { VoteEntity, createVoteEntity, revealVote, resetVote, voteValue } from './votes';
+import { VoteEntity, createVoteEntity, revealVote, resetVote, voteValue, pauseVote, resumeVote } from './votes';
 
 /**
  * 日付をYYYYMMDD形式にフォーマットする
@@ -151,5 +151,21 @@ export const roomVote = (room: RoomEntity, userId: string, value: number): RoomE
   return {
     ...room,
     votes: [...room.votes.filter((vote) => vote.userId !== userId), votedVote],
+  };
+};
+
+/**
+ * 投票を休止状態を切り替える
+ */
+export const roomSwitchPaused = (room: RoomEntity, userId: string, isPaused: boolean): RoomEntity => {
+  const v = room.votes.find((vote) => vote.userId === userId);
+  if (!v) {
+    // TODO: エラーを返す
+    throw new Error('Vote not found');
+  }
+  const updatedVote = isPaused ? pauseVote(v) : resumeVote(v);
+  return {
+    ...room,
+    votes: [...room.votes.filter((vote) => vote.userId !== userId), updatedVote],
   };
 };

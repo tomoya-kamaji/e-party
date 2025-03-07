@@ -7,6 +7,8 @@ export interface Participant {
   userName: string;
   userImageUrl: string;
   value: number | undefined;
+  // 休止中かどうか
+  isPaused: boolean;
 }
 
 /**

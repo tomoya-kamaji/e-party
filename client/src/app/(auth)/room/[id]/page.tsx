@@ -2,15 +2,18 @@
 
 import Button from '@/component/Button';
 import { LoadingIndicator } from '@/component/LoadingIndicator';
-import ParticipantList from '@/feature/room/[id]/component/ParticipantList';
-import VotingArea from '@/feature/room/[id]/component/VotingArea';
-import { useRoomDetail } from '@/feature/room/[id]/hook/useRoomDetail';
-import { Participant } from '@/feature/room/[id]/model/participant';
+import ParticipantList from '@/app/(auth)/room/[id]/_ui/ParticipantList';
+import VotingArea from '@/app/(auth)/room/[id]/_ui/VotingArea';
 import { useFetchDetailRoom } from '@/repository/api/room/useFetchDetail';
 import { useAuth } from '@/state/AuthContext';
 import { useParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
+import { useRoomDetail } from '@/feature/room/hook/useRoomDetail';
+import { Participant } from '@/feature/room/model/participant';
 
+/**
+ * ルーム詳細画面
+ */
 const RoomDetailPage = () => {
   const {
     participants,
@@ -32,6 +35,7 @@ const RoomDetailPage = () => {
   // 定期的にルーム情報を更新
   useEffect(() => {
     let isActive = true;
+    const intervalTime = 2000;
 
     const fetchData = async () => {
       if (!isActive) return;
@@ -40,18 +44,18 @@ const RoomDetailPage = () => {
         await mutate(); // APIリクエストの完了を待つ
         // コンポーネントがまだマウントされていれば次のリクエストをスケジュール
         if (isActive) {
-          fetchData();
+          setTimeout(fetchData, intervalTime);
         }
       } catch (error) {
         console.error('Failed to fetch room data:', error);
         if (isActive) {
           // エラー時は1秒待ってから再試行
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          fetchData();
+          setTimeout(fetchData, 1000);
         }
       }
     };
 
+    // 初回実行
     fetchData();
 
     return () => {
@@ -64,14 +68,16 @@ const RoomDetailPage = () => {
 
     const updatedParticipants: Participant[] =
       data.room.votes.map((vote) => ({
-        id: vote.userId,
+        id: vote.id,
         userId: vote.userId,
         userName: vote.userName,
         userImageUrl: vote.userImageUrl,
         value: vote.value ?? undefined,
+        isPaused: vote.isPaused,
       })) || [];
     // updatedParticipantsをid順に並び替える
     updatedParticipants.sort((a, b) => a.id.localeCompare(b.id));
+    console.log(updatedParticipants);
 
     setParticipants(updatedParticipants);
 
@@ -93,7 +99,7 @@ const RoomDetailPage = () => {
       <div className="mx-auto max-w-xl rounded-lg bg-white p-6 shadow-md">
         <Suspense fallback={<LoadingIndicator />}>
           {/* 参加者一覧 */}
-          <ParticipantList participants={participants} isRevealed={isRevealed} />
+          <ParticipantList roomId={id as string} participants={participants} isRevealed={isRevealed} />
           {/* 投票ボタン群 */}
           <VotingArea voted={voted} handleVote={handleVote} />
           {/* ボタン群 */}

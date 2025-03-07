@@ -16,6 +16,7 @@ import {
 import { AppContext, CURRENT_USER_KEY } from '@/server/middleware';
 import { RoomDetailQuery } from '@/server/infra/query/roomDetail';
 import { RoomRepository } from '@/server/infra/roomRepository';
+import { RoomSwitchPausedUseCase } from '@/server/feature/room/useCase/swicthPaused';
 
 /**
  * ルームAPI
@@ -75,12 +76,22 @@ const roomApp = new Hono<AppContext>()
     return c.json({ message: 'OK' });
   })
   // ルームを退会
-  .patch('/:id/leave', zValidator('param', z.object({ id: z.string() })), async (c) => {
-    const id = c.req.param('id');
-    const currentUser = c.get(CURRENT_USER_KEY);
-    await RoomLeaveUseCase(RoomRepository).execute(id, currentUser.id);
-    return c.json({ message: 'OK' });
-  })
+  .patch(
+    '/:id/leave/:participantId',
+    zValidator(
+      'param',
+      z.object({
+        id: z.string(),
+        participantId: z.string(),
+      })
+    ),
+    async (c) => {
+      const id = c.req.param('id');
+      const participantId = c.req.param('participantId');
+      await RoomLeaveUseCase(RoomRepository).execute(id, participantId);
+      return c.json({ message: 'OK' });
+    }
+  )
   // ルーム作成API
   .post(
     '',
@@ -96,6 +107,18 @@ const roomApp = new Hono<AppContext>()
 
       const res = await CreateRoomUseCase(RoomRepository).execute(name, currentUser.id);
       return c.json<CreateRoomResponse>(res);
+    }
+  )
+  .patch(
+    '/:id/switch-paused/:participantId',
+    zValidator('param', z.object({ id: z.string(), participantId: z.string() })),
+    zValidator('json', z.object({ isPaused: z.boolean() })),
+    async (c) => {
+      const id = c.req.param('id');
+      const participantId = c.req.param('participantId');
+      const isPaused = c.req.valid('json').isPaused;
+      await RoomSwitchPausedUseCase(RoomRepository).execute(id, participantId, isPaused);
+      return c.json({ message: 'OK' });
     }
   );
 
