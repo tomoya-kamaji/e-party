@@ -29,6 +29,7 @@ const voteSchema = z.object({
   userImageUrl: z.string(),
   value: z.number().nullable(),
   isRevealed: z.boolean(),
+  isPaused: z.boolean(),
 });
 
 const roomDetailSchema = z.object({

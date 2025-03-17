@@ -24,6 +24,7 @@ export const RoomDetailUseCase = (roomDetailQuery: IRoomDetailQuery) => ({
           userImageUrl: vote.userImageUrl,
           value: vote.value ?? null,
           isRevealed: vote.isRevealed,
+          isPaused: vote.isPaused,
         })),
       },
     };

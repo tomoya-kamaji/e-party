@@ -34,6 +34,7 @@ export const RoomDetailQuery: IRoomDetailQuery = {
           userImageUrl: vote.user.image_url,
           value: vote.value ?? undefined,
           isRevealed: vote.is_revealed,
+          isPaused: vote.is_paused,
         })),
       },
     };

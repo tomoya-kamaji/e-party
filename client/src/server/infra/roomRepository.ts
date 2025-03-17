@@ -28,6 +28,8 @@ export const RoomRepository: IRoomRepository = {
         },
       });
 
+      console.log(room.votes);
+
       // Votes の保存
       await Promise.all(
         room.votes.map((vote) =>
@@ -36,6 +38,7 @@ export const RoomRepository: IRoomRepository = {
             update: {
               value: vote.value ?? null,
               is_revealed: vote.isRevealed,
+              is_paused: vote.isPaused,
             },
             create: {
               id: vote.id,
@@ -43,6 +46,7 @@ export const RoomRepository: IRoomRepository = {
               user_id: vote.userId,
               value: vote.value ?? null,
               is_revealed: vote.isRevealed,
+              is_paused: vote.isPaused,
             },
           })
         )
@@ -102,6 +106,7 @@ const convertToRoomEntity = (room: RoomWithDetails): RoomEntity => {
         userId: vote.user_id,
         value: vote.value ?? undefined,
         isRevealed: vote.is_revealed,
+        isPaused: vote.is_paused,
       })
     ),
     createdAt: room.created_at,

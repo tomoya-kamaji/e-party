@@ -6,6 +6,7 @@ export interface VoteEntity {
   userId: string;
   value?: number;
   isRevealed: boolean;
+  isPaused: boolean;
 }
 
 /**
@@ -17,6 +18,7 @@ export const createVoteEntity = (params: { roomId: string; userId: string }): Vo
     roomId: params.roomId,
     userId: params.userId,
     isRevealed: false,
+    isPaused: false,
   };
 };
 
@@ -29,6 +31,7 @@ export const reconstructVoteEntity = (params: {
   userId: string;
   value?: number;
   isRevealed: boolean;
+  isPaused: boolean;
 }): VoteEntity => {
   return {
     id: params.id,
@@ -36,6 +39,7 @@ export const reconstructVoteEntity = (params: {
     userId: params.userId,
     value: params.value,
     isRevealed: params.isRevealed,
+    isPaused: params.isPaused,
   };
 };
 
@@ -67,5 +71,25 @@ export const resetVote = (vote: VoteEntity): VoteEntity => {
     ...vote,
     value: undefined,
     isRevealed: false,
+  };
+};
+
+/**
+ * 投票を休止
+ */
+export const pauseVote = (vote: VoteEntity): VoteEntity => {
+  return {
+    ...vote,
+    isPaused: true,
+  };
+};
+
+/**
+ * 投票を再開
+ */
+export const resumeVote = (vote: VoteEntity): VoteEntity => {
+  return {
+    ...vote,
+    isPaused: false,
   };
 };

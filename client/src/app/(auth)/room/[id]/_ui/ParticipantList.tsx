@@ -1,7 +1,8 @@
+import { Participant, hasVoted } from '@/feature/room/model/participant';
 import { useRoomAction } from '@/repository/api/room';
-import { hasVoted, Participant } from '../model/participant';
 
 interface Props {
+  roomId: string;
   participants: Participant[];
   isRevealed: boolean;
 }
@@ -17,13 +18,16 @@ const getCardStatusClasses = (cardLabel: string) => {
   }
 };
 
-const ParticipantList = ({ participants, isRevealed }: Props) => {
-  const { leaveRoom } = useRoomAction();
+/**
+ * 参加者一覧
+ */
+const ParticipantList = ({ roomId, participants, isRevealed }: Props) => {
+  const { switchPaused } = useRoomAction();
 
   // confirm を表示する
-  const handleLeave = (id: string) => {
-    if (confirm('退会させますか？')) {
-      leaveRoom(id);
+  const handleLeave = (participantId: string, isPaused: boolean) => {
+    if (confirm(`投票を休止させますか？${participantId}`)) {
+      switchPaused(roomId, participantId, isPaused);
     }
   };
 
@@ -39,13 +43,20 @@ const ParticipantList = ({ participants, isRevealed }: Props) => {
 
         return (
           <div key={participant.id} className={`flex items-center p-4 shadow-md`}>
+            {/* 投票休止状態を表示 */}
+            {participant.isPaused && <p className="text-sm text-gray-500">投票休止中</p>}
             <div className="flex w-full items-center justify-between">
               <img src={participant.userImageUrl} alt="user-icon" className="h-12 w-12 rounded-full" />
               {/* 文字サイズでかく */}
               <p className={`text-large ${statusClasses} p-4`}>{cardLabel}</p>
             </div>
-            {/* ゴミ箱 */}
-            <button onClick={() => handleLeave(participant.id)}>💀</button>
+
+            {/* if文で分岐 */}
+            {participant.isPaused ? (
+              <button onClick={() => handleLeave(participant.id, false)}>▶️</button>
+            ) : (
+              <button onClick={() => handleLeave(participant.id, true)}>⏸️</button>
+            )}
           </div>
         );
       })}
