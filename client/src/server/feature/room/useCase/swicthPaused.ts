@@ -1,4 +1,4 @@
-import { IRoomRepository, pauseVote, resumeVote, roomSwitchPaused } from '@/server/domain/room';
+import { IRoomRepository, roomSwitchPaused } from '@/server/domain/room';
 
 /**
  * ルームの投票休止状態を切り替えるユースケース

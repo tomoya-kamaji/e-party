@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "prisma generate && next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "bun --bun next dev",
+    "build": "bun prisma generate && bun --bun next build",
+    "start": "bun --bun next start",
+    "lint": "bun next lint",
     "format": "prettier --write .",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:generate": "bun prisma generate",
+    "prisma:migrate": "bun prisma migrate dev",
+    "prisma:migrate:prod": "bun prisma migrate deploy"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.2",
