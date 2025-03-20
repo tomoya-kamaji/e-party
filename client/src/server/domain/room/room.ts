@@ -157,15 +157,17 @@ export const roomVote = (room: RoomEntity, userId: string, value: number): RoomE
 /**
  * 投票を休止状態を切り替える
  */
-export const roomSwitchPaused = (room: RoomEntity, userId: string, isPaused: boolean): RoomEntity => {
-  const v = room.votes.find((vote) => vote.userId === userId);
+export const roomSwitchPaused = (room: RoomEntity, voteId: string): RoomEntity => {
+  const v = room.votes.find((vote) => vote.id === voteId);
+  console.log(v);
+
   if (!v) {
     // TODO: エラーを返す
-    throw new Error('Vote not found');
+    throw new Error(`roomSwitchPaused -> Vote not found ${voteId}`);
   }
-  const updatedVote = isPaused ? pauseVote(v) : resumeVote(v);
+  const updatedVote = v.isPaused ? resumeVote(v) : pauseVote(v);
   return {
     ...room,
-    votes: [...room.votes.filter((vote) => vote.userId !== userId), updatedVote],
+    votes: [...room.votes.filter((vote) => vote.id !== voteId), updatedVote],
   };
 };

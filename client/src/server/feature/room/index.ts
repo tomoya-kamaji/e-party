@@ -110,14 +110,12 @@ const roomApp = new Hono<AppContext>()
     }
   )
   .patch(
-    '/:id/switch-paused/:participantId',
-    zValidator('param', z.object({ id: z.string(), participantId: z.string() })),
-    zValidator('json', z.object({ isPaused: z.boolean() })),
+    '/:id/switch-paused/:voteId',
+    zValidator('param', z.object({ id: z.string(), voteId: z.string() })),
     async (c) => {
       const id = c.req.param('id');
-      const participantId = c.req.param('participantId');
-      const isPaused = c.req.valid('json').isPaused;
-      await RoomSwitchPausedUseCase(RoomRepository).execute(id, participantId, isPaused);
+      const voteId = c.req.param('voteId');
+      await RoomSwitchPausedUseCase(RoomRepository).execute(id, voteId);
       return c.json({ message: 'OK' });
     }
   );

@@ -25,9 +25,9 @@ const ParticipantList = ({ roomId, participants, isRevealed }: Props) => {
   const { switchPaused } = useRoomAction();
 
   // confirm を表示する
-  const handleLeave = (participantId: string, isPaused: boolean) => {
+  const handleSwitchPaused = (participantId: string) => {
     if (confirm(`投票を休止させますか？${participantId}`)) {
-      switchPaused(roomId, participantId, isPaused);
+      switchPaused(roomId, participantId);
     }
   };
 
@@ -53,9 +53,9 @@ const ParticipantList = ({ roomId, participants, isRevealed }: Props) => {
 
             {/* if文で分岐 */}
             {participant.isPaused ? (
-              <button onClick={() => handleLeave(participant.id, false)}>▶️</button>
+              <button onClick={() => handleSwitchPaused(participant.id)}>投票中</button>
             ) : (
-              <button onClick={() => handleLeave(participant.id, true)}>⏸️</button>
+              <button onClick={() => handleSwitchPaused(participant.id)}>休止中</button>
             )}
           </div>
         );

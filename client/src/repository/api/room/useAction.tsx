@@ -107,11 +107,10 @@ const onLeave = async (id: string, participantId: string) => {
   });
 };
 
-const onSwitchPaused = async (id: string, participantId: string, isPaused: boolean) => {
-  return apiClient.api.rooms[':id']['switch-paused'][':participantId']
+const onSwitchPaused = async (id: string, voteId: string) => {
+  return apiClient.api.rooms[':id']['switch-paused'][':voteId']
     .$patch({
-      param: { id: id, participantId: participantId },
-      json: { isPaused: isPaused },
+      param: { id: id, voteId },
     })
     .then((res) => {
       return res.json();
@@ -198,8 +197,8 @@ export const useRoomAction = () => {
    * 投票休止状態を切り替える
    */
   const switchPaused = useCallback(
-    async (id: string, participantId: string, isPaused: boolean) => {
-      return onSwitchPaused(id, participantId, isPaused);
+    async (id: string, voteId: string) => {
+      return onSwitchPaused(id, voteId);
     },
     [mutate]
   );
