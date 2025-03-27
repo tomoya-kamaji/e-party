@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo } from 'react';
 import { useRoomDetail } from '@/feature/room/hook/useRoomDetail';
 import { Participant } from '@/feature/room/model/participant';
+import { isNotNullish } from '@/util/guards';
 
 /**
  * ルーム詳細画面
@@ -29,7 +30,7 @@ const RoomDetailPage = () => {
 
   // 投票公開状態の導出：全員が投票済みかどうか
   const isRevealed = useMemo(() => {
-    return participants.every((p) => p.value !== undefined);
+    return participants.filter((p) => !p.isPaused).every((p) => isNotNullish(p.value));
   }, [participants]);
 
   // 自身の投票データの導出

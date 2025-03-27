@@ -73,6 +73,7 @@ const ParticipantList = ({ roomId, participants, isRevealed }: Props) => {
                 )}
               </div>
 
+              {/* カードの表示 */}
               <div className="flex items-center gap-3">
                 <p className={`text-xl font-semibold ${statusClasses} min-w-[40px] p-2 text-center`}>{cardLabel}</p>
 
