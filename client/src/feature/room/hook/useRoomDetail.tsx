@@ -3,7 +3,7 @@
 import { useSnackbar } from '@/component/SnackBar';
 import { useRoomAction } from '@/repository/api/room';
 import { useParams, redirect } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { PATH_PAGE } from '@/util/route';
 
 export const useRoomDetail = () => {

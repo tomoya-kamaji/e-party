@@ -1,6 +1,3 @@
-import { apiClient } from '@/util/api/client';
-import { ClientResponse } from 'hono/client';
-
 /**
  * Honoのクエリパラメータの型を取得する
  */
