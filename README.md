@@ -2,6 +2,14 @@
 - プランニングポーカーアプリ
 
 
+# 開発起動
+## Supabaseを初期化（初回のみ）
+supabase init
+
+## Supabaseを起動
+supabase start
+
+
 # 技術構成
 
 ## **1. フロントエンド**
