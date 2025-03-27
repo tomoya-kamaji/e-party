@@ -1,5 +1,3 @@
-import { ClientResponse } from 'hono/client';
-
 /**
  * Honoのクエリパラメータの型を取得する
  */
@@ -22,4 +20,13 @@ export type HonoBodyType<T> = T extends (args: { json: infer B }, options?: any)
  * Honoのレスポンスの型を取得する
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type HonoResponseType<T> = T extends (...args: any[]) => Promise<ClientResponse<infer R, any, any>> ? R : never;
+// レスポンスの型を抽出
+
+// レスポンスの型を抽出
+
+/**
+ * Honoのレスポンスの型を取得する
+ */
+// レスポンスの型を抽出
+export type HonoResponseType<T> =
+  T extends Promise<infer R> ? (R extends Response ? Awaited<ReturnType<R['json']>> : never) : never;

@@ -13,6 +13,7 @@
     "prisma:migrate:prod": "bun prisma migrate deploy"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@hono/zod-validator": "^0.4.2",
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.1.0",

@@ -3,8 +3,7 @@
 import { useSnackbar } from '@/component/SnackBar';
 import { useRoomAction } from '@/repository/api/room';
 import { useParams, redirect } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { Participant } from '../model/participant';
+import { useCallback } from 'react';
 import { PATH_PAGE } from '@/util/route';
 
 export const useRoomDetail = () => {
@@ -12,19 +11,13 @@ export const useRoomDetail = () => {
   const { showSnackbar } = useSnackbar();
   const { vote, resetAllVote, resetVote, joinRoom, switchPaused } = useRoomAction();
 
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [voted, setVoted] = useState<number | undefined>();
-  const [isRevealed, setIsRevealed] = useState<boolean>(false);
-
   if (!id || typeof id !== 'string') {
     // ルームIDが取得できない場合はhomeにリダイレクト
     redirect(PATH_PAGE.home);
   }
-
   // 投票
   const handleVote = useCallback(
     (value: number) => {
-      setVoted(value);
       vote(id, Number(value));
     },
     [vote, id]
@@ -33,13 +26,11 @@ export const useRoomDetail = () => {
   // 全員リセット
   const handleAllReset = useCallback(() => {
     resetAllVote(id);
-    setVoted(undefined);
   }, [resetAllVote, id]);
 
   // 自分の投票リセット
   const handleReset = useCallback(() => {
     resetVote(id);
-    setVoted(undefined);
   }, [resetVote, id]);
 
   // 招待URLコピー
@@ -56,7 +47,6 @@ export const useRoomDetail = () => {
     });
   }, [joinRoom, id, showSnackbar]);
 
-
   // 投票休止状態を切り替える
   const handleSwitchPaused = useCallback(
     (participantId: string, isPaused: boolean) => {
@@ -66,12 +56,6 @@ export const useRoomDetail = () => {
   );
 
   return {
-    participants,
-    setParticipants,
-    voted,
-    setVoted,
-    isRevealed,
-    setIsRevealed,
     handleSwitchPaused,
     handleVote,
     handleAllReset,

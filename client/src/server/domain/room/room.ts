@@ -128,7 +128,7 @@ export const resetCurrentVote = (room: RoomEntity, userId: string): RoomEntity =
   const v = room.votes.find((vote) => vote.userId === userId);
   if (!v) {
     // TODO: エラーを返す
-    throw new Error('Vote not found');
+    throw new Error('resetCurrentVote: Vote not found');
   }
 
   return {
@@ -145,7 +145,7 @@ export const roomVote = (room: RoomEntity, userId: string, value: number): RoomE
   const v = room.votes.find((vote) => vote.userId === userId);
   if (!v) {
     // TODO: エラーを返す
-    throw new Error('Vote not found');
+    throw new Error('roomVote: Vote not found');
   }
   const votedVote = voteValue(v, value);
   return {
@@ -157,15 +157,15 @@ export const roomVote = (room: RoomEntity, userId: string, value: number): RoomE
 /**
  * 投票を休止状態を切り替える
  */
-export const roomSwitchPaused = (room: RoomEntity, userId: string, isPaused: boolean): RoomEntity => {
-  const v = room.votes.find((vote) => vote.userId === userId);
+export const roomSwitchPaused = (room: RoomEntity, voteId: string, isPaused: boolean): RoomEntity => {
+  const v = room.votes.find((vote) => vote.id === voteId);
   if (!v) {
     // TODO: エラーを返す
-    throw new Error('Vote not found');
+    throw new Error('roomSwitchPaused: Vote not found');
   }
   const updatedVote = isPaused ? pauseVote(v) : resumeVote(v);
   return {
     ...room,
-    votes: [...room.votes.filter((vote) => vote.userId !== userId), updatedVote],
+    votes: [...room.votes.filter((vote) => vote.id !== voteId), updatedVote],
   };
 };

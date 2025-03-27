@@ -1,17 +1,11 @@
+import { HonoResponseType, apiClient } from '@/util/api';
+
 /**
- * 参加者
+ * 参加者(投票者)
  */
-export interface Participant {
-  id: string;
-  userId: string;
-  userName: string;
-  userImageUrl: string;
-  value: number | undefined;
-  // 休止中かどうか
-  isPaused: boolean;
-}
+export type Participant = HonoResponseType<ReturnType<(typeof apiClient.api.rooms)[':id']['$get']>>['room']['votes'][number];
 
 /**
  * 投票済みかどうか
  */
-export const hasVoted = (p: Participant) => p.value !== undefined;
+export const hasVoted = (p: Participant) => p.value !== null;
